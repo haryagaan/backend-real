@@ -41,6 +41,11 @@ const userSocialSchema = new Schema({
         default: { User: 200 },
     },
 
+    roles: {
+        type: Object,
+        default: { User: 200 },
+    },
+
     rating: {
         type: Number,
         default: 0,

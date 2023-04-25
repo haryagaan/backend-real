@@ -7,6 +7,7 @@ const { validationResult } = require('express-validator');
 const { emailSender } = require('../email/emailSender');
 
 const jwt = require('jsonwebtoken');
+const { tokenGenerator } = require('../services/tokenGenerator');
 
 exports.Signup = async (req, res) => {
     const { firstName, lastName, email, password, type } = req.body;
@@ -90,9 +91,7 @@ exports.Login = async (req, res) => {
             return res.status(400).send('Password incorrect');
         }
 
-        const token = jwt.sign({ existingUser }, process.env.TOKEN_SECRET, {
-            expiresIn: '3d',
-        });
+        const token = tokenGenerator({ existingUser });
 
         res.status(200).json({ token: token, user: existingUser, isVerified: existingUser.isVerified });
     } catch (err) {

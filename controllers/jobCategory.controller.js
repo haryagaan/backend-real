@@ -54,7 +54,7 @@ exports.deleteCategory = async (req, res) => {
     try {
         const { _id } = req.body;
         const del = await JobCategory.deleteOne({ _id: _id });
-        res.send("deleted");
+        res.send('deleted');
     } catch (err) {
         res.status(400).send(err);
     }

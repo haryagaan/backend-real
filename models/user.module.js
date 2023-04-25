@@ -43,7 +43,7 @@ const userSchema = new Schema({
         required: true,
     },
 
-    role: {
+    roles: {
         type: Object,
         default: { User: 200 },
     },

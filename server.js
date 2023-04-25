@@ -30,6 +30,8 @@ const jobRouter = require('./routes/job.routes');
 
 const jobCategoryRouter = require('./routes/jobCategory.routes');
 
+const { authMiddleware } = require('./middleware/authMiddleware');
+
 //
 
 app.use(express.json());
@@ -42,11 +44,11 @@ app.use('/auth/', authRouter, authSocialRouter);
 
 app.use('/email/', emailRouter);
 
-app.use('/user/', userRouter);
+app.use('/user/', authMiddleware, userRouter);
 
-app.use('/job/', jobRouter);
+app.use('/job/', authMiddleware, jobRouter);
 
-app.use('/category/', jobCategoryRouter);
+app.use('/category/', authMiddleware, jobCategoryRouter);
 
 //
 
