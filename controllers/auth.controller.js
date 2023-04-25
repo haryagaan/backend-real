@@ -1,117 +1,101 @@
-const { User } = require("../models/user.module");
+const { User } = require('../models/user.module');
 
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
-const { validationResult } = require("express-validator");
+const { validationResult } = require('express-validator');
 
-const { emailSender } = require("../email/emailSender");
+const { emailSender } = require('../email/emailSender');
 
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 exports.Signup = async (req, res) => {
-  const { firstName, lastName, email, password, type } = req.body;
+    const { firstName, lastName, email, password, type } = req.body;
 
-  if (firstName == "" || lastName == "" || email == "" || password == "") {
-    return res.status(404).send("Fill in all the forms");
-  }
-
-  const existingEmail = await User.findOne({ email: email });
-
-  if (existingEmail) {
-    return res.status(404).send("Email already exists");
-  }
-
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    if (errors.errors[0].param == "email") {
-      return res.status(400).send("Invalid email");
+    if (firstName == '' || lastName == '' || email == '' || password == '') {
+        return res.status(404).send('Fill in all the forms');
     }
 
-    if (errors.errors[0].param == "password") {
-      return res
-        .status(400)
-        .send(
-          "Password must be longer than 6 characters and less than 30 characters"
-        );
+    const existingEmail = await User.findOne({ email: email });
+
+    if (existingEmail) {
+        return res.status(404).send('Email already exists');
     }
 
-    if (errors.errors[0].param == "lastName") {
-      return res
-        .status(400)
-        .send(
-          "Lastname must be longer than 2 characters and less than 30 characters"
-        );
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        if (errors.errors[0].param == 'email') {
+            return res.status(400).send('Invalid email');
+        }
+
+        if (errors.errors[0].param == 'password') {
+            return res.status(400).send('Password must be longer than 6 characters and less than 30 characters');
+        }
+
+        if (errors.errors[0].param == 'lastName') {
+            return res.status(400).send('Lastname must be longer than 2 characters and less than 30 characters');
+        }
+
+        if (errors.errors[0].param == 'firstName') {
+            return res.status(400).send('Firstname must be longer than 2 characters and less than 30 characters');
+        }
     }
 
-    if (errors.errors[0].param == "firstName") {
-      return res
-        .status(400)
-        .send(
-          "Firstname must be longer than 2 characters and less than 30 characters"
-        );
+    try {
+        const salt = await bcrypt.genSalt(10);
+
+        const hashPassword = await bcrypt.hash(password, salt);
+
+        const newUser = await User.create({
+            firstName,
+            lastName,
+            email,
+            password: hashPassword,
+            clientOrFreelancer: type,
+        });
+
+        // const newUserId = newUser.id;
+
+        // const token = jwt.sign({ id: newUserId }, process.env.TOKEN_SECRET, {
+        //   expiresIn: "3m",
+        // });
+
+        // const url = process.env.BASE_URL_BACKEND + "/email/confirm/" + token;
+
+        // emailSender(email, url);
+
+        res.status(200).send('created');
+    } catch (err) {
+        res.status(404).send(err);
     }
-  }
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-
-    const hashPassword = await bcrypt.hash(password, salt);
-
-    const newUser = await User.create({
-      firstName,
-      lastName,
-      email,
-      password: hashPassword,
-      clientOrFreelancer: type,
-    });
-
-    // const newUserId = newUser.id;
-
-    // const token = jwt.sign({ id: newUserId }, process.env.TOKEN_SECRET, {
-    //   expiresIn: "3m",
-    // });
-
-    // const url = process.env.BASE_URL_BACKEND + "/email/confirm/" + token;
-
-    // emailSender(email, url);
-
-    res.status(200).send("created");
-  } catch (err) {
-    res.status(404).send(err);
-  }
 };
 
 exports.Login = async (req, res) => {
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  if (email == "" || password == "") {
-    return res.status(400).send("Fill in all forms");
-  }
-
-  try {
-    const existingUser = await User.findOne({ email: email });
-
-    if (!existingUser) {
-      return res.status(404).send("Couldnt find user");
+    if (email == '' || password == '') {
+        return res.status(400).send('Fill in all forms');
     }
 
-    const isValidPassword = await bcrypt.compare(
-      password,
-      existingUser.password
-    );
+    try {
+        const existingUser = await User.findOne({ email: email });
 
-    if (!isValidPassword) {
-      return res.status(400).send("Password incorrect");
+        if (!existingUser) {
+            return res.status(404).send('Couldnt find user');
+        }
+
+        const isValidPassword = await bcrypt.compare(password, existingUser.password);
+
+        if (!isValidPassword) {
+            return res.status(400).send('Password incorrect');
+        }
+
+        const token = jwt.sign({ existingUser }, process.env.TOKEN_SECRET, {
+            expiresIn: '3d',
+        });
+
+        res.status(200).json({ token: token, user: existingUser, isVerified: existingUser.isVerified });
+    } catch (err) {
+        res.status(400).send(err);
     }
-
-    const token = jwt.sign({ existingUser }, process.env.TOKEN_SECRET, {
-      expiresIn: "3d",
-    });
-
-    res.status(200).json({ token: token, user: existingUser , isVerified:existingUser.isVerified });
-  } catch (err) {
-    res.status(400).send(err);
-  }
 };
-

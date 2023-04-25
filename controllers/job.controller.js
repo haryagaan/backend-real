@@ -1,52 +1,46 @@
-const {Job}=require("../models/job.module");
+const { Job } = require('../models/job.module');
 
-const {JobCategory}=require("../models/jobCategory.module");
+const { JobCategory } = require('../models/jobCategory.module');
 
-exports.createJob=async(req,res)=>{
-    const {
-        name
-    }=req.body;
+exports.createJob = async (req, res) => {
+    const { name } = req.body;
 
-    try{
-        if(!name){
-            return res.status(404).send("Job name is required");
+    try {
+        if (!name) {
+            return res.status(404).send('Job name is required');
         }
 
-        const newJob=await Job.create({name});
+        const newJob = await Job.create({ name });
 
         await newJob.save();
 
         res.send(newJob);
-
-    }catch(err){
+    } catch (err) {
         res.status(400).send(err);
     }
-}
+};
 
-exports.createJobAndPushToCategory=async(req,res)=>{
-    const {
-        name,
-        category
-    }=req.body;
+exports.createJobAndPushToCategory = async (req, res) => {
+    const { name, category } = req.body;
 
-    try{
-        if(!name || !category){
-            return res.status(404).send("Job or Category required");
+    try {
+        if (!name || !category) {
+            return res.status(404).send('Job or Category required');
         }
 
-        const existingCategory=await JobCategory.findOne({category});
+        const existingCategory = await JobCategory.findOne({ category });
 
-        if(!existingCategory){
-            return res.status(404).send("Couldnt find a category");
+        if (!existingCategory) {
+            return res.status(404).send('Couldnt find a category');
         }
 
-        const existingJob=await Job.findOne({name});
+        const existingJob = await Job.findOne({ name });
 
-        if(existingJob){
-            return res.status(400).send("Job already exists");
+        if (existingJob) {
+            return res.status(400).send('Job already exists');
         }
 
-        const newJob=await Job.create({name , category});
+        const newJob = await Job.create({ name, category });
 
         await newJob.save();
 
@@ -55,18 +49,17 @@ exports.createJobAndPushToCategory=async(req,res)=>{
         await existingCategory.save();
 
         res.status(200).json(existingCategory);
-
-    }catch(err){
+    } catch (err) {
         res.status(400).send(err);
     }
-}
+};
 
-exports.getJobs=async(req,res)=>{
-    try{
-        const jobs=await Job.find({});
+exports.getJobs = async (req, res) => {
+    try {
+        const jobs = await Job.find({});
 
-        res.status(200).json(jobs)
-    }catch(err){
+        res.status(200).json(jobs);
+    } catch (err) {
         res.status(400).send(err);
     }
-}
+};
