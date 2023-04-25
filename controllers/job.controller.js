@@ -34,13 +34,19 @@ exports.createJobAndPushToCategory=async(req,res)=>{
             return res.status(404).send("Job or Category required");
         }
 
-        const existingCategory=await JobCategory.findOne({category:category});
+        const existingCategory=await JobCategory.findOne({category});
 
         if(!existingCategory){
             return res.status(404).send("Couldnt find a category");
         }
 
-        const newJob=await Job.create({name});
+        const existingJob=await Job.findOne({name});
+
+        if(existingJob){
+            return res.status(400).send("Job already exists");
+        }
+
+        const newJob=await Job.create({name , category});
 
         await newJob.save();
 

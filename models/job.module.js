@@ -6,6 +6,16 @@ const jobSchema = new Schema({
     required: true,
   },
 
+  category:{
+    type:String,
+    required:true,
+  },
+
+  totalUsers:{
+    type:Number,
+    default:0,
+  }
+
 });
 
 exports.Job = model("jobs", jobSchema);

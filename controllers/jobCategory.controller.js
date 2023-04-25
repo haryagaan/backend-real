@@ -8,6 +8,10 @@ exports.createCategory=async(req,res)=>{
     }=req.body;
 
     try{
+        if(!category){
+            return res.status(400).send("Category required");
+        }
+
         const newCategory=await JobCategory.create({category});
 
         await newCategory.save();
