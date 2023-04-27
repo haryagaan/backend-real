@@ -1,14 +1,8 @@
 const { Router } = require('express');
-const { getUser, getUsers, createRole, deleteUser } = require('../controllers/user.controller');
-const { authMiddleware } = require('../middleware/authMiddleware');
-const { roleMiddleware } = require('../middleware/roleMiddleware');
+const { getUser, getUsers, createRole} = require('../controllers/user.controller');
 
 const userRouter = Router();
 
-userRouter
-    .get('/', getUsers)
-    .get('/:id', getUser)
-    .post('/:id', roleMiddleware(999), createRole)
-    .delete('/:id', deleteUser);
+userRouter.get('/', getUsers).get('/:id', getUser).post('/:id', createRole)
 
 module.exports = userRouter;
