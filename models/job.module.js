@@ -7,14 +7,21 @@ const jobSchema = new Schema({
     },
 
     category: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref:"jobs-categories",
         required: true,
     },
+
+    posts:[{
+        type:Schema.Types.ObjectId,
+        ref:"jobs-posts",
+    }],
 
     totalUsers: {
         type: Number,
         default: 0,
     },
+    
 });
 
 exports.Job = model('jobs', jobSchema);

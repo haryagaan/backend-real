@@ -9,4 +9,4 @@ const jobCategorySchema = new Schema({
     jobs: [{ type: Schema.Types.ObjectId, ref: 'jobs' }],
 });
 
-exports.JobCategory = model('jobs-Categories', jobCategorySchema);
+exports.JobCategory = model('jobs-categories', jobCategorySchema);

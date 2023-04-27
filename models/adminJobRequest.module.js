@@ -8,7 +8,8 @@ const adminJobRequestSchema = new Schema({
     },
 
     category:{
-        type:String,
+        type:Schema.Types.ObjectId,
+        ref:"jobs-categories",
         required:true,
     },
 
@@ -20,13 +21,13 @@ const adminJobRequestSchema = new Schema({
     creatorId:{
         type:Schema.Types.ObjectId,
         ref:"users",
-        // required:true,
+        required:true,
     },
 
     creatorIdSocial:{
         type:Schema.Types.ObjectId,
         ref:"users-socials",
-        // required:true,
+        required:true,
     },
 
     creatorType:{

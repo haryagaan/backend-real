@@ -41,11 +41,6 @@ const userSocialSchema = new Schema({
         default: { User: 200 },
     },
 
-    roles: {
-        type: Object,
-        default: { User: 200 },
-    },
-
     rating: {
         type: Number,
         default: 0,
@@ -54,4 +49,4 @@ const userSocialSchema = new Schema({
     jobs: [{ type: Schema.Types.ObjectId, ref: 'Jobs' }],
 });
 
-exports.UserSocial = model('users-social', userSocialSchema);
+exports.UserSocial = model('users-socials', userSocialSchema);
