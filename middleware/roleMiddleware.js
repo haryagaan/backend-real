@@ -6,14 +6,19 @@ exports.roleMiddleware = (...allowedRoles) => {
         if (!token) return res.send('Authorization token is required');
 
         try {
-            const payload = jwt.verify(token, process.env.JWT_SECRET);
+            const payload = jwt.verify(token, process.env.TOKEN_SECRET);
+            console.log(payload, 'lala');
+            const result = false;
 
-            if (!payload) return res.send('Unauthorized');
-
-            if (!req.roles) return res.sendStatus(401);
+            if (!payload) return res.send('sa');
+            console.log(payload.existingUser.role);
+            if (!payload.existingUser.role) return res.send('ZAIL');
+            const role = payload.existingUser.role;
             const rolesArray = [...allowedRoles];
-            const result = req.roles.map((role) => rolesArray.includes(role)).find((val) => val === true);
-            console.log(rolesArray);
+            if ((role = rolesArray)) {
+                console.log(rolesArray);
+                result = true
+            }
             if (!result) return res.sendStatus(401);
             next();
         } catch (error) {

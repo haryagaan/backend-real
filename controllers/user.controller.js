@@ -70,3 +70,12 @@ exports.updateUser = async (req, res) => {
         throw res.send(err);
     }
 };
+
+exports.deleteUser = async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+        return res.send("user deleted")
+    } catch (err) {
+        throw res.send("zaill");
+    }
+};
