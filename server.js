@@ -32,6 +32,8 @@ const jobCategoryRouter = require('./routes/jobCategory.routes');
 
 const adminJobRequestRouter=require('./routes/adminJobRequest.routes');
 
+const jobPostRouter=require("./routes/jobPost.routes");
+
 //
 
 app.use(express.json());
@@ -50,7 +52,9 @@ app.use('/job/', jobRouter);
 
 app.use('/category/', jobCategoryRouter);
 
-app.use('/admin/' , adminJobRequestRouter)
+app.use('/admin/' , adminJobRequestRouter);
+
+app.use('/post/' , jobPostRouter);
 
 //
 
