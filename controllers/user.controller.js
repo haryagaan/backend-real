@@ -45,12 +45,28 @@ exports.createRole = async (req, res) => {
             return res.status(400).send('Password incorrect');
         }
 
-        user.role = body.role;
+        Object.assign(user, body.role);
 
         await user.save();
 
         res.send('updated');
     } catch (err) {
         res.send(err);
+    }
+};
+
+exports.updateUser = async (req, res) => {
+    try {
+        const data = req.body;
+        const id = req.params.id;
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).send('Couldnt find user');
+        }
+        Object.assign(user, data);
+        await user.save();
+    } catch (err) {
+        throw res.send(err);
     }
 };
