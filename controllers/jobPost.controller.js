@@ -44,6 +44,7 @@ exports.createPost=async(req,res)=>{
                 creatorRating=existingUser.rating;
                 creatorType="basic";
             }else{
+                creatorRating=existingUserSocial.rating;
                 creatorType="social";
             }
         }
@@ -83,6 +84,41 @@ exports.createPost=async(req,res)=>{
         await existingJob.save();
 
         res.status(200).json(newPost);
+    }catch(err){
+        res.send(err);
+    }
+}
+
+
+exports.deletePost=async(req,res)=>{
+
+    const id=req.params.id;
+
+    const postId=req.params.post;
+
+    try{
+        if(!id || !postId){
+            return res.status(400).send("Id's required");
+        }
+
+        const existingUser=await User.findById(id);
+
+        const existingUserSocial=await UserSocial.findById(id);
+
+        if(!existingUser && !existingUserSocial){
+            return res.status(404).send("No user found");
+        }
+
+        const existingPost=await JobPost.findById(postId);
+
+        if(!existingPost){
+            return res.status(404).send("No post found");
+        }
+
+        // if(id==existingPost.creatorId && id==existingPost.creatorIdSocial){
+        //     JobPost
+        // }
+
     }catch(err){
         res.send(err);
     }

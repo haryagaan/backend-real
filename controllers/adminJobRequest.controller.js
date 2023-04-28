@@ -7,9 +7,11 @@ const { UserSocial } = require('../models/user-social.module');
 const { JobCategory } = require('../models/jobCategory.module');
 
 exports.makeRequest = async (req, res) => {
-    const { jobName, category } = req.body;
+    const { jobName } = req.body;
 
     const id = req.params.id;
+
+    const category=req.params.category;
 
     let creatorType;
 
@@ -32,7 +34,7 @@ exports.makeRequest = async (req, res) => {
             }
         }
 
-        const existingCategory = await JobCategory.findOne({ category });
+        const existingCategory = await JobCategory.findById(category);
 
         if (!existingCategory) {
             return res.send('Category not found');

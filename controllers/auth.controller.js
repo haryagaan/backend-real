@@ -10,9 +10,9 @@ const jwt = require('jsonwebtoken');
 const { tokenGenerator } = require('../services/tokenGenerator');
 
 exports.Signup = async (req, res) => {
-    const { firstName, lastName, email, password, role } = req.body;
+    const { firstName, lastName, email, password, clientOrFreelancer } = req.body;
 
-    if (firstName == '' || lastName == '' || email == '' || password == '') {
+    if (firstName == '' || lastName == '' || email == '' || password == '' || !clientOrFreelancer) {
         return res.status(404).send('Fill in all the forms');
     }
 
@@ -52,7 +52,7 @@ exports.Signup = async (req, res) => {
             lastName,
             email,
             password: hashPassword,
-            role: role,
+            clientOrFreelancer,
         });
 
         // const newUserId = newUser.id;
