@@ -42,13 +42,6 @@ const userSchema = new Schema({
         type: Object,
         default: { user: 200 },
         required: true,
-        validate: {
-            validator: function (role) {
-                console.log(role);
-                return role === undefined || role === null || role.user === 300 || role.user === 200;
-            },
-            message: 'Invalid role',
-        },
     },
 
     rating: {

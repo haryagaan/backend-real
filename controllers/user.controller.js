@@ -24,32 +24,37 @@ exports.getUser = async (req, res) => {
 };
 
 exports.createRole = async (req, res) => {
-    const body = req.body || {};
-
-    if (!body.firstName || !body.lastName || !body.email) return res.send('name, password, email is required');
-
-    console.log(body);
-
     try {
+        const body = req.body || {};
+
+        if (!body.firstName || !body.lastName || !body.email) return res.send('name, password, email is required');
+
         const user = await User.findOne({
             firstName: body.firstName,
             lastName: body.lastName,
             email: body.email,
         });
 
-        // if (!user) {
-        //     return res.status(404).send('Couldnt find user');
-        // }
+        if (!user) {
+            return res.status(404).send('Couldnt find user');
+        }
 
-        // const isValidPassword = await bcrypt.compare(body.password, user.password);
+        const isValidPassword = await bcrypt.compare(body.password, user.password);
 
-        // if (!isValidPassword) {
-        //     return res.status(400).send('Password incorrect');
-        // }
+        if (!isValidPassword) {
+            return res.status(400).send('Password incorrect');
+        }
 
-        // await user.save();
+        const { role } = body;
+        if (![200, 300, 999].includes(role.user)) {
+            return res.status(400).send('Invalid role');
+        }
+        
+        user.role = body.role;
 
-        res.send('updated');
+        await user.save();
+
+        res.send(user);
     } catch (error) {
         res.send(error);
     }

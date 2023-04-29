@@ -15,11 +15,10 @@ exports.roleMiddleware = (...allowedRoles) => {
             const rolesArray = allowedRoles;
             const role = payload.existingUser.role.user;
 
-            if (rolesArray.includes(role)) {
-                res.send('yvsn2');
-                return next();
+            if (!rolesArray.includes(role)) {
+                return res.send('Unauthorized');
             }
-            return res.send('Unauthorized');
+            return next();
         } catch (error) {
             throw res.send(error);
         }

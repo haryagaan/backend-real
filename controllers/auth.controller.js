@@ -12,6 +12,8 @@ const { tokenGenerator } = require('../services/tokenGenerator');
 exports.Signup = async (req, res) => {
     const { firstName, lastName, email, password, role } = req.body;
 
+    const userRole = role && role.user === 300 ? { user: 300 } : { user: 200 };
+
     if (firstName == '' || lastName == '' || email == '' || password == '') {
         return res.status(404).send('Fill in all the forms');
     }
@@ -52,7 +54,7 @@ exports.Signup = async (req, res) => {
             lastName,
             email,
             password: hashPassword,
-            role,
+            role: userRole,
         });
 
         // const newUserId = newUser.id;
