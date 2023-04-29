@@ -4,14 +4,14 @@ const { getUser, getUsers, createRole, deleteUser } = require('../controllers/us
 
 const { roleMiddleware } = require('../middleware/roleMiddleware');
 
-const {authMiddleware}=require("../middleware/authMiddleware")
+const { authMiddleware } = require('../middleware/authMiddleware');
 
 const userRouter = Router();
 
 userRouter
-    .get('/', authMiddleware , getUsers)
-    .get('/:id', authMiddleware , getUser)
+    .get('/', getUsers)
+    .get('/:id', getUser)
     .post('/', roleMiddleware(999), createRole)
-    .delete('/:id',roleMiddleware(999) , deleteUser);
+    .delete('/:id', roleMiddleware(999), deleteUser);
 
 module.exports = userRouter;

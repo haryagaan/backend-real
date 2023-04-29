@@ -21,7 +21,7 @@ exports.createCategory = async (req, res) => {
 };
 
 exports.getSpecificCategory = async (req, res) => {
-    const category=req.params.category;
+    const category = req.params.category;
 
     try {
         if (!category) {
@@ -51,11 +51,11 @@ exports.getAllCategory = async (req, res) => {
     }
 };
 exports.deleteCategory = async (req, res) => {
-    const category=req.params.category;
+    const category = req.params.category;
 
     try {
-        if(!category){
-            return res.status(404).send("No category found");
+        if (!category) {
+            return res.status(404).send('No category found');
         }
 
         const del = await JobCategory.findByIdAndDelete(category);

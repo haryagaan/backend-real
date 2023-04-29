@@ -72,7 +72,7 @@ exports.updateUser = async (req, res) => {
         Object.assign(user, data);
         await user.save();
 
-        res.status(200).json(user)
+        res.status(200).json(user);
     } catch (err) {
         throw res.send(err);
     }
@@ -85,7 +85,6 @@ exports.deleteUser = async (req, res) => {
             const user = req.body;
         }
         return res.send('user deleted');
-        
     } catch (err) {
         throw res.send(err);
     }
