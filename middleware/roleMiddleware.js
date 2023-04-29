@@ -18,6 +18,7 @@ exports.roleMiddleware = (...allowedRoles) => {
             if (!rolesArray.includes(role)) {
                 return res.send('Unauthorized');
             }
+
             return next();
         } catch (error) {
             throw res.send(error);
