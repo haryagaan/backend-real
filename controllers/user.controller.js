@@ -54,7 +54,7 @@ exports.createRole = async (req, res) => {
 
         await user.save();
 
-        res.send(user);
+        res.json(user);
     } catch (error) {
         res.send(error);
     }
@@ -71,6 +71,8 @@ exports.updateUser = async (req, res) => {
         }
         Object.assign(user, data);
         await user.save();
+
+        res.status(200).json(user)
     } catch (err) {
         throw res.send(err);
     }
@@ -83,6 +85,7 @@ exports.deleteUser = async (req, res) => {
             const user = req.body;
         }
         return res.send('user deleted');
+        
     } catch (err) {
         throw res.send(err);
     }

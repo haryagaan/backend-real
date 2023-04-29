@@ -10,7 +10,7 @@ exports.roleMiddleware = (...allowedRoles) => {
 
             if (!payload) return res.send('Unauthorized');
 
-            console.log(payload.existingUser.role.user);
+            // console.log(payload.existingUser.role.user);
 
             const rolesArray = allowedRoles;
             const role = payload.existingUser.role.user;

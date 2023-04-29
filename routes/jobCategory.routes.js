@@ -1,5 +1,9 @@
 const express = require('express');
 
+const {authMiddleware} =require("../middleware/authMiddleware");
+
+const {roleMiddleware}=require("../middleware/roleMiddleware");
+
 const {
     createCategory,
     getSpecificCategory,
@@ -10,8 +14,8 @@ const {
 const jobCategoryRouter = express.Router();
 
 jobCategoryRouter
-    .post('/create', createCategory)
-    .get('/get', getSpecificCategory)
-    .get('/getall', getAllCategory)
-    .delete('/delete', deleteCategory);
+    .post('/create', roleMiddleware(999) ,  createCategory)
+    .get('/get/:category', authMiddleware ,  getSpecificCategory)
+    .get('/getall', authMiddleware ,  getAllCategory)
+    .delete('/delete/:category', roleMiddleware(999) ,  deleteCategory);
 module.exports = jobCategoryRouter;

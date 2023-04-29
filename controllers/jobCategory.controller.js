@@ -21,20 +21,20 @@ exports.createCategory = async (req, res) => {
 };
 
 exports.getSpecificCategory = async (req, res) => {
-    const { category } = req.body;
+    const category=req.params.category;
 
     try {
         if (!category) {
             return res.status(400).send('Category required');
         }
 
-        const existingCategory = await JobCategory.findOne({ category: category });
+        const existingCategory = await JobCategory.findById(category);
 
         if (!existingCategory) {
             return res.status(404).send('Couldnt find a category');
         }
 
-        const populatedExistingCategory = await JobCategory.findOne({ category: category }).populate('jobs');
+        const populatedExistingCategory = await JobCategory.findById(category).populate('jobs');
 
         res.status(200).json(populatedExistingCategory);
     } catch (err) {
@@ -51,9 +51,15 @@ exports.getAllCategory = async (req, res) => {
     }
 };
 exports.deleteCategory = async (req, res) => {
+    const category=req.params.category;
+
     try {
-        const { _id } = req.body;
-        const del = await JobCategory.deleteOne({ _id: _id });
+        if(!category){
+            return res.status(404).send("No category found");
+        }
+
+        const del = await JobCategory.findByIdAndDelete(category);
+
         res.send('deleted');
     } catch (err) {
         res.status(400).send(err);
