@@ -49,7 +49,7 @@ exports.createRole = async (req, res) => {
         if (![200, 300, 999].includes(role.user)) {
             return res.status(400).send('Invalid role');
         }
-        
+
         user.role = body.role;
 
         await user.save();
