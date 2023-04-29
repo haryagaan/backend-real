@@ -11,7 +11,7 @@ exports.makeRequest = async (req, res) => {
 
     const id = req.params.id;
 
-    const category=req.params.category;
+    const category = req.params.category;
 
     let creatorType;
 

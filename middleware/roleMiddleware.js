@@ -7,22 +7,21 @@ exports.roleMiddleware = (...allowedRoles) => {
 
         try {
             const payload = jwt.verify(token, process.env.TOKEN_SECRET);
-            console.log(payload, 'lala');
-            const result = false;
 
-            if (!payload) return res.send('sa');
-            console.log(payload.existingUser.role);
-            if (!payload.existingUser.role) return res.send('ZAIL');
-            const role = payload.existingUser.role;
-            const rolesArray = [...allowedRoles];
-            if ((role = rolesArray)) {
-                console.log(rolesArray);
-                result = true
+            if (!payload) return res.send('Unauthorized');
+
+            console.log(payload.existingUser.role.user);
+
+            const rolesArray = allowedRoles;
+            const role = payload.existingUser.role.user;
+
+            if (rolesArray.includes(role)) {
+                res.send('yvsn2');
+                return next();
             }
-            if (!result) return res.sendStatus(401);
-            next();
+            return res.send('Unauthorized');
         } catch (error) {
-            throw res.send({ error });
+            throw res.send(error);
         }
     };
 };

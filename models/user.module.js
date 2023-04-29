@@ -38,14 +38,17 @@ const userSchema = new Schema({
         default: false,
     },
 
-    clientOrFreelancer: {
-        type: Object,
-        required: true,
-    },
-
     role: {
         type: Object,
-        default: { User: 200 },
+        default: { user: 200 },
+        required: true,
+        validate: {
+            validator: function (role) {
+                console.log(role);
+                return role === undefined || role === null || role.user === 300 || role.user === 200;
+            },
+            message: 'Invalid role',
+        },
     },
 
     rating: {

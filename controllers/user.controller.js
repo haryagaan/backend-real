@@ -28,6 +28,8 @@ exports.createRole = async (req, res) => {
 
     if (!body.firstName || !body.lastName || !body.email) return res.send('name, password, email is required');
 
+    console.log(body);
+
     try {
         const user = await User.findOne({
             firstName: body.firstName,
@@ -35,23 +37,21 @@ exports.createRole = async (req, res) => {
             email: body.email,
         });
 
-        if (!user) {
-            return res.status(404).send('Couldnt find user');
-        }
+        // if (!user) {
+        //     return res.status(404).send('Couldnt find user');
+        // }
 
-        const isValidPassword = await bcrypt.compare(body.password, user.password);
+        // const isValidPassword = await bcrypt.compare(body.password, user.password);
 
-        if (!isValidPassword) {
-            return res.status(400).send('Password incorrect');
-        }
+        // if (!isValidPassword) {
+        //     return res.status(400).send('Password incorrect');
+        // }
 
-        Object.assign(user, body.role);
-
-        await user.save();
+        // await user.save();
 
         res.send('updated');
-    } catch (err) {
-        res.send(err);
+    } catch (error) {
+        res.send(error);
     }
 };
 
@@ -74,8 +74,11 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
-        return res.send("user deleted")
+        if (!user) {
+            const user = req.body;
+        }
+        return res.send('user deleted');
     } catch (err) {
-        throw res.send("zaill");
+        throw res.send(err);
     }
 };

@@ -21,7 +21,7 @@ exports.createJob = async (req, res) => {
 exports.createJobAndPushToCategory = async (req, res) => {
     const { name } = req.body;
 
-    const category=req.params.category;
+    const category = req.params.category;
 
     try {
         if (!name || !category) {

@@ -1,82 +1,77 @@
-const {JobPost}=require("../models/jobPost.module");
+const { JobPost } = require('../models/jobPost.module');
 
-const {Job}=require("../models/job.module");
+const { Job } = require('../models/job.module');
 
-const { JobCategory } = require("../models/jobCategory.module");
+const { JobCategory } = require('../models/jobCategory.module');
 
-const {User}=require("../models/user.module");
+const { User } = require('../models/user.module');
 
-const {UserSocial}=require("../models/user-social.module")
+const { UserSocial } = require('../models/user-social.module');
 
-exports.createPost=async(req,res)=>{
-    const {
-        title,
-        mainText,
-        price,
-    } =req.body;
+exports.createPost = async (req, res) => {
+    const { title, mainText, price } = req.body;
 
-    const id=req.params.id;
+    const id = req.params.id;
 
-    const job=req.params.job;
+    const job = req.params.job;
 
-    const category=req.params.category;
-
+    const category = req.params.category;
 
     let creatorType;
 
     let creatorRating;
 
-    try{
-        if(!title || !mainText || !price || !id || !job || !category){
-            return res.status(400).send("Insufficient requests");
+    try {
+        if (!title || !mainText || !price || !id || !job || !category) {
+            return res.status(400).send('Insufficient requests');
         }
 
         //user
 
-        const existingUser=await User.findById(id);
+        const existingUser = await User.findById(id);
 
-        const existingUserSocial=await UserSocial.findById(id);
+        const existingUserSocial = await UserSocial.findById(id);
 
-        if(!existingUser && !existingUserSocial){
-            return res.status(404).send("No user found");
-        }else{
-            if(existingUser){
-                creatorRating=existingUser.rating;
-                creatorType="basic";
-            }else{
-                creatorRating=existingUserSocial.rating;
-                creatorType="social";
+        if (!existingUser && !existingUserSocial) {
+            return res.status(404).send('No user found');
+        } else {
+            if (existingUser) {
+                creatorRating = existingUser.rating;
+                creatorType = 'basic';
+            } else {
+                creatorRating = existingUserSocial.rating;
+                creatorType = 'social';
             }
         }
 
         //job
 
-        const existingJob=await Job.findById(job);
+        const existingJob = await Job.findById(job);
 
-        if(!existingJob){
-            return res.status(404).send("Job not found");
+        if (!existingJob) {
+            return res.status(404).send('Job not found');
         }
 
         //category
 
-        const existingCategory=await JobCategory.findById(category);
+        const existingCategory = await JobCategory.findById(category);
 
-        if(!existingCategory){
-            return res.status(404).send("Category not found");
+        if (!existingCategory) {
+            return res.status(404).send('Category not found');
         }
 
-        const hourlyPrice=price+"MNT"+"/h";
+        const hourlyPrice = price + 'MNT' + '/h';
 
-        const newPost=await JobPost.create({
+        const newPost = await JobPost.create({
             title,
             mainText,
-            price:hourlyPrice,
+            price: hourlyPrice,
             job,
             category,
-            creatorId:id,
-            creatorIdSocial:id,
+            creatorId: id,
+            creatorIdSocial: id,
             creatorType,
-            creatorRating
+            creatorRating,
         });
 
         existingJob.posts.push(newPost._id);
@@ -84,42 +79,39 @@ exports.createPost=async(req,res)=>{
         await existingJob.save();
 
         res.status(200).json(newPost);
-    }catch(err){
+    } catch (err) {
         res.send(err);
     }
-}
+};
 
+exports.deletePost = async (req, res) => {
+    const id = req.params.id;
 
-exports.deletePost=async(req,res)=>{
+    const postId = req.params.post;
 
-    const id=req.params.id;
-
-    const postId=req.params.post;
-
-    try{
-        if(!id || !postId){
+    try {
+        if (!id || !postId) {
             return res.status(400).send("Id's required");
         }
 
-        const existingUser=await User.findById(id);
+        const existingUser = await User.findById(id);
 
-        const existingUserSocial=await UserSocial.findById(id);
+        const existingUserSocial = await UserSocial.findById(id);
 
-        if(!existingUser && !existingUserSocial){
-            return res.status(404).send("No user found");
+        if (!existingUser && !existingUserSocial) {
+            return res.status(404).send('No user found');
         }
 
-        const existingPost=await JobPost.findById(postId);
+        const existingPost = await JobPost.findById(postId);
 
-        if(!existingPost){
-            return res.status(404).send("No post found");
+        if (!existingPost) {
+            return res.status(404).send('No post found');
         }
 
         // if(id==existingPost.creatorId && id==existingPost.creatorIdSocial){
         //     JobPost
         // }
-
-    }catch(err){
+    } catch (err) {
         res.send(err);
     }
-}
+};
