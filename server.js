@@ -37,6 +37,7 @@ const jobPostRouter = require('./routes/jobPost.routes');
 
 const { authMiddleware } = require('./middleware/authMiddleware');
 
+
 //
 
 app.use(express.json());

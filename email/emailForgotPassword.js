@@ -4,7 +4,7 @@ const path = require('path');
 
 const hbs = require('nodemailer-express-handlebars');
 
-exports.emailSender = async (email, url) => {
+exports.emailForgotPassword = async (email, digitCode) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -30,9 +30,9 @@ exports.emailSender = async (email, url) => {
         to: email,
         subject: 'Hello ✔',
         text: `Hello`,
-        template: 'emailConfirm',
+        template: 'forgotPassword',
         context: {
-            url: url,
+            code: digitCode,
         },
     };
 

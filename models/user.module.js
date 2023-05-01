@@ -33,6 +33,11 @@ const userSchema = new Schema({
         default: 'https://api-private.atlassian.com/users/6b5c1609134a5887d7f3ab1b73557664/avatar',
     },
 
+    verificationMethod:{
+        type:String,
+        required:true,
+    },
+
     isVerified: {
         type: Boolean,
         default: false,
@@ -49,7 +54,23 @@ const userSchema = new Schema({
         default: 0,
     },
 
-    jobs: [{ type: Schema.Types.ObjectId, ref: 'Jobs' }],
+    jobs: [{ type: Schema.Types.ObjectId, ref: 'jobs' }],
+
+    notifications:[
+        {
+            type:Object,
+        }
+    ],
+
+    forgotPassword:{
+        type:Boolean,
+        default:false,
+    },
+
+    forgotPasswordCode:{
+        type:Number,
+    }
+
 });
 
 exports.User = model('users', userSchema);

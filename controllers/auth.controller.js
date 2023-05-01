@@ -7,15 +7,16 @@ const { validationResult } = require('express-validator');
 const { emailSender } = require('../email/emailSender');
 
 const jwt = require('jsonwebtoken');
+
 const { tokenGenerator } = require('../services/tokenGenerator');
 
 exports.Signup = async (req, res) => {
-    const { firstName, lastName, email, password, role } = req.body;
+    const { firstName, lastName, email, password, role , verificationMethod } = req.body;
 
     const userRole = role && role.user === 300 ? { user: 300 } : { user: 200 };
 
-    if (firstName == '' || lastName == '' || email == '' || password == '') {
-        return res.status(404).send('Fill in all the forms');
+    if (!firstName || !lastName || !email || !password || !verificationMethod) {
+        return res.status(400).send('Fill in all the forms');
     }
 
     const existingEmail = await User.findOne({ email: email });
@@ -44,6 +45,10 @@ exports.Signup = async (req, res) => {
         }
     }
 
+    if(verificationMethod!="email" && verificationMethod!="phone"){
+        return res.status(400).send("Invalid verification method");
+    }
+
     try {
         const salt = await bcrypt.genSalt(10);
 
@@ -55,17 +60,18 @@ exports.Signup = async (req, res) => {
             email,
             password: hashPassword,
             role: userRole,
+            verificationMethod
         });
 
-        // const newUserId = newUser.id;
+        const newUserId = newUser._id;
 
-        // const token = jwt.sign({ id: newUserId }, process.env.TOKEN_SECRET, {
-        //   expiresIn: "3m",
-        // });
+        const token = jwt.sign({ id: newUserId }, process.env.TOKEN_SECRET, {
+          expiresIn: "3m",
+        });
 
-        // const url = process.env.BASE_URL_BACKEND + "/email/confirm/" + token;
+        const url = process.env.BASE_URL_BACKEND + "/email/confirm/" + token;
 
-        // emailSender(email, url);
+        emailSender(email, url);
 
         res.status(200).send('created');
     } catch (err) {
@@ -76,7 +82,7 @@ exports.Signup = async (req, res) => {
 exports.Login = async (req, res) => {
     const { email, password } = req.body;
 
-    if (email == '' || password == '') {
+    if (!email || !password) {
         return res.status(400).send('Fill in all forms');
     }
 
@@ -92,6 +98,8 @@ exports.Login = async (req, res) => {
         if (!isValidPassword) {
             return res.status(400).send('Password incorrect');
         }
+
+        existingUser.password=undefined;
 
         const token = tokenGenerator({ existingUser });
 

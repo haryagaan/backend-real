@@ -31,14 +31,10 @@ const userSocialSchema = new Schema({
         required: true,
     },
 
-    clientOrFreelancer: {
-        type: Object,
-        required: true,
-    },
-
     role: {
         type: Object,
-        default: { User: 200 },
+        default: { user: 200 },
+        required:true,
     },
 
     rating: {
@@ -46,7 +42,14 @@ const userSocialSchema = new Schema({
         default: 0,
     },
 
-    jobs: [{ type: Schema.Types.ObjectId, ref: 'Jobs' }],
+    jobs: [{ type: Schema.Types.ObjectId, ref: 'jobs' }],
+
+    notifications:[
+        {
+            type:Object,
+        }
+    ]
+    
 });
 
 exports.UserSocial = model('users-socials', userSocialSchema);

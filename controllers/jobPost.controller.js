@@ -113,11 +113,11 @@ exports.deletePost = async (req, res) => {
 
             res.status(200).send("Post deleted by its creator");
         }else{
-            if(existingUser && existingUser.role.admin==process.env.ADMIN){
+            if(existingUser && existingUser.role.user==process.env.ADMIN){
                 const del=await JobPost.findByIdAndDelete(postId);
 
                 res.status(200).send("Post deleted by admin basic");
-            }else if(existingUserSocial && existingUserSocial.role.admin==process.env.ADMIN){
+            }else if(existingUserSocial && existingUserSocial.role.user==process.env.ADMIN){
                 const del=await JobPost.findByIdAndDelete(postId);
 
                 res.status(200).send("Post deleted by admin social");
