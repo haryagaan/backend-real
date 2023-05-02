@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken');
 const { tokenGenerator } = require('../services/tokenGenerator');
 
 exports.Signup = async (req, res) => {
-    const { firstName, lastName, email, password, role , verificationMethod } = req.body;
+    const { firstName, lastName, email, password, role, verificationMethod } = req.body;
 
     const userRole = role && role.user === 300 ? { user: 300 } : { user: 200 };
 
@@ -45,8 +45,8 @@ exports.Signup = async (req, res) => {
         }
     }
 
-    if(verificationMethod!="email" && verificationMethod!="phone"){
-        return res.status(400).send("Invalid verification method");
+    if (verificationMethod != 'email' && verificationMethod != 'phone') {
+        return res.status(400).send('Invalid verification method');
     }
 
     try {
@@ -60,16 +60,16 @@ exports.Signup = async (req, res) => {
             email,
             password: hashPassword,
             role: userRole,
-            verificationMethod
+            verificationMethod,
         });
 
         const newUserId = newUser._id;
 
         const token = jwt.sign({ id: newUserId }, process.env.TOKEN_SECRET, {
-          expiresIn: "3m",
+            expiresIn: '3m',
         });
 
-        const url = process.env.BASE_URL_BACKEND + "/email/confirm/" + token;
+        const url = process.env.BASE_URL_BACKEND + '/email/confirm/' + token;
 
         emailSender(email, url);
 
@@ -99,7 +99,7 @@ exports.Login = async (req, res) => {
             return res.status(400).send('Password incorrect');
         }
 
-        existingUser.password=undefined;
+        existingUser.password = undefined;
 
         const token = tokenGenerator({ existingUser });
 

@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { emailConfirmation, sendUrl , emailForgotPassword} = require('../controllers/email.controller');
+const { emailConfirmation, sendUrl, emailForgotPassword } = require('../controllers/email.controller');
 
 const emailRouter = express.Router();
 

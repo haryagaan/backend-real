@@ -34,7 +34,7 @@ const userSocialSchema = new Schema({
     role: {
         type: Object,
         default: { user: 200 },
-        required:true,
+        required: true,
     },
 
     rating: {
@@ -44,12 +44,11 @@ const userSocialSchema = new Schema({
 
     jobs: [{ type: Schema.Types.ObjectId, ref: 'jobs' }],
 
-    notifications:[
+    notifications: [
         {
-            type:Object,
-        }
-    ]
-    
+            type: Object,
+        },
+    ],
 });
 
 exports.UserSocial = model('users-socials', userSocialSchema);

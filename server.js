@@ -34,9 +34,7 @@ const adminJobRequestRouter = require('./routes/adminJobRequest.routes');
 
 const jobPostRouter = require('./routes/jobPost.routes');
 
-
 const { authMiddleware } = require('./middleware/authMiddleware');
-
 
 //
 
