@@ -82,31 +82,6 @@ exports.createRole = async (req, res) => {
     }
 };
 
-// exports.updateUser = async (req, res) => {
-//     const data = req.body;
-
-//     const id = req.params.id;
-
-//     try {
-//         if(!data || !id){
-//             return res.status(400).send("body , id required");
-//         }
-
-//         const user = await User.findById(id);
-
-//         if (!user) {
-//             return res.status(404).send('Couldnt find user');
-//         }
-//         Object.assign(user, data);
-
-//         await user.save();
-
-//         res.status(200).json(user);
-//     } catch (err) {
-//         throw res.send(err);
-//     }
-// };
-
 exports.deleteUser = async (req, res) => {
     const id=req.params.id;
 

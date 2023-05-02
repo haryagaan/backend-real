@@ -103,7 +103,7 @@ exports.Login = async (req, res) => {
 
         const token = tokenGenerator({ existingUser });
 
-        res.status(200).json({ token: token });
+        res.status(200).json({ token: token , isVerified:existingUser.isVerified });
     } catch (err) {
         res.status(400).send(err);
     }

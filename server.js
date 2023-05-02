@@ -37,6 +37,7 @@ const jobPostRouter = require('./routes/jobPost.routes');
 
 const { authMiddleware } = require('./middleware/authMiddleware');
 
+const {decodeToken}=require("./decode/decode")
 
 //
 
@@ -59,6 +60,8 @@ app.use('/category/', authMiddleware, jobCategoryRouter);
 app.use('/admin/', authMiddleware, adminJobRequestRouter);
 
 app.use('/post/', authMiddleware, jobPostRouter);
+
+app.post("/decode/", decodeToken)
 
 //
 
