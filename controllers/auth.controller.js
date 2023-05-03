@@ -11,11 +11,11 @@ const jwt = require('jsonwebtoken');
 const { tokenGenerator } = require('../services/tokenGenerator');
 
 exports.Signup = async (req, res) => {
-    const { firstName, lastName, email, password, role, verificationMethod } = req.body;
+    const { firstName, lastName, email, password, role } = req.body;
 
     const userRole = role && role.user === 300 ? { user: 300 } : { user: 200 };
 
-    if (!firstName || !lastName || !email || !password || !verificationMethod) {
+    if (!firstName || !lastName || !email || !password ) {
         return res.status(400).send('Fill in all the forms');
     }
 
@@ -45,10 +45,6 @@ exports.Signup = async (req, res) => {
         }
     }
 
-    if (verificationMethod != 'email' && verificationMethod != 'phone') {
-        return res.status(400).send('Invalid verification method');
-    }
-
     try {
         const salt = await bcrypt.genSalt(10);
 
@@ -60,7 +56,6 @@ exports.Signup = async (req, res) => {
             email,
             password: hashPassword,
             role: userRole,
-            verificationMethod,
         });
 
         const newUserId = newUser._id;

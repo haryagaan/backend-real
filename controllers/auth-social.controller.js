@@ -1,7 +1,9 @@
 const { UserSocial } = require('../models/user-social.module');
 
 exports.SocialAuth = async (req, res) => {
-    const { displayName, email, socialUid, socialType, imageUrl } = req.body;
+    const { displayName, email, socialUid, socialType, imageUrl , role } = req.body;
+
+    const userRole = role && role.user === 300 ? { user: 300 } : { user: 200 };
 
     try {
         const existingUser = await UserSocial.findOne({ socialUid: socialUid });
@@ -22,6 +24,7 @@ exports.SocialAuth = async (req, res) => {
                 imageUrl,
                 socialType,
                 socialUid,
+                role:userRole
             });
 
             await newUser.save();

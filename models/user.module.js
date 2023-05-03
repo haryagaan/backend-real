@@ -35,7 +35,6 @@ const userSchema = new Schema({
 
     verificationMethod: {
         type: String,
-        required: true,
     },
 
     isVerified: {

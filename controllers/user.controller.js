@@ -167,7 +167,7 @@ exports.forgotPassword = async (req, res) => {
             }
         });
 
-        if (payload._id != id || payload.isVerified != true || payload.verificationMethod != 'email') {
+        if (payload._id != id || payload.isVerified != true) {
             return res.status(400).send('You dont have a permission');
         }
 
