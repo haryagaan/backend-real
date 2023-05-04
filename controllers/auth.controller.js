@@ -13,7 +13,7 @@ const { tokenGenerator } = require('../services/tokenGenerator');
 exports.Signup = async (req, res) => {
     const { firstName, lastName, email, password, role } = req.body;
 
-    const userRole = role && role.user === 300 ? { user: 300 } : { user: 200 };
+    const userRole = role == 300 ? { user: 300 } : { user: 200 };
 
     if (!firstName || !lastName || !email || !password ) {
         return res.status(400).send('Fill in all the forms');
@@ -96,9 +96,13 @@ exports.Login = async (req, res) => {
 
         existingUser.password = undefined;
 
-        const token = tokenGenerator({ existingUser });
+        existingUser.forgotPasswordCode=undefined;
 
-        res.status(200).json({ token: token });
+        const userToken=jwt.sign({user:existingUser} , process.env.TOKEN_SECRET , {
+            expiresIn:"6h"
+        })
+
+        res.status(200).json({ token: userToken });
     } catch (err) {
         res.status(400).send(err);
     }
