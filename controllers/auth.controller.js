@@ -11,11 +11,11 @@ const jwt = require('jsonwebtoken');
 const { tokenGenerator } = require('../services/tokenGenerator');
 
 exports.Signup = async (req, res) => {
-    const { firstName, lastName, email, password, role , verificationMethod } = req.body;
+    const { firstName, lastName, email, password, role } = req.body;
 
-    const userRole = role && role.user === 300 ? { user: 300 } : { user: 200 };
+    const userRole = role == 300 ? { user: 300 } : { user: 200 };
 
-    if (!firstName || !lastName || !email || !password || !verificationMethod) {
+    if (!firstName || !lastName || !email || !password ) {
         return res.status(400).send('Fill in all the forms');
     }
 
@@ -45,10 +45,6 @@ exports.Signup = async (req, res) => {
         }
     }
 
-    if(verificationMethod!="email" && verificationMethod!="phone"){
-        return res.status(400).send("Invalid verification method");
-    }
-
     try {
         const salt = await bcrypt.genSalt(10);
 
@@ -60,16 +56,15 @@ exports.Signup = async (req, res) => {
             email,
             password: hashPassword,
             role: userRole,
-            verificationMethod
         });
 
         const newUserId = newUser._id;
 
         const token = jwt.sign({ id: newUserId }, process.env.TOKEN_SECRET, {
-          expiresIn: "3m",
+            expiresIn: '3m',
         });
 
-        const url = process.env.BASE_URL_BACKEND + "/email/confirm/" + token;
+        const url = process.env.BASE_URL_BACKEND + '/email/confirm/' + token;
 
         emailSender(email, url);
 
@@ -99,11 +94,15 @@ exports.Login = async (req, res) => {
             return res.status(400).send('Password incorrect');
         }
 
-        existingUser.password=undefined;
+        existingUser.password = undefined;
 
-        const token = tokenGenerator({ existingUser });
+        existingUser.forgotPasswordCode=undefined;
 
-        res.status(200).json({ token: token , isVerified:existingUser.isVerified });
+        const userToken=jwt.sign({user:existingUser} , process.env.TOKEN_SECRET , {
+            expiresIn:"6h"
+        })
+
+        res.status(200).json({ token: userToken });
     } catch (err) {
         res.status(400).send(err);
     }

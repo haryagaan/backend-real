@@ -108,23 +108,21 @@ exports.deletePost = async (req, res) => {
             return res.status(404).send('No post found');
         }
 
-        if(id==existingPost.creatorId && id==existingPost.creatorIdSocial){
-            const del=await JobPost.findByIdAndDelete(postId);
+        if (id == existingPost.creatorId && id == existingPost.creatorIdSocial) {
+            const del = await JobPost.findByIdAndDelete(postId);
 
-            res.status(200).send("Post deleted by its creator");
-        }else{
-            if(existingUser && existingUser.role.user==process.env.ADMIN){
-                const del=await JobPost.findByIdAndDelete(postId);
+            res.status(200).send('Post deleted by its creator');
+        } else {
+            if (existingUser && existingUser.role.user == process.env.ADMIN) {
+                const del = await JobPost.findByIdAndDelete(postId);
 
-                res.status(200).send("Post deleted by admin basic");
-            }else if(existingUserSocial && existingUserSocial.role.user==process.env.ADMIN){
-                const del=await JobPost.findByIdAndDelete(postId);
+                res.status(200).send('Post deleted by admin basic');
+            } else if (existingUserSocial && existingUserSocial.role.user == process.env.ADMIN) {
+                const del = await JobPost.findByIdAndDelete(postId);
 
-                res.status(200).send("Post deleted by admin social");
+                res.status(200).send('Post deleted by admin social');
             }
         }
-
-
     } catch (err) {
         res.send(err);
     }

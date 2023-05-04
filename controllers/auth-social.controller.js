@@ -1,13 +1,21 @@
 const { UserSocial } = require('../models/user-social.module');
 
+const jwt=require("jsonwebtoken");
+
 exports.SocialAuth = async (req, res) => {
-    const { displayName, email, socialUid, socialType, imageUrl } = req.body;
+    const { displayName, email, socialUid, socialType, imageUrl , role } = req.body;
+
+    const userRole = role == 300 ? { user: 300 } : { user: 200 };
 
     try {
         const existingUser = await UserSocial.findOne({ socialUid: socialUid });
 
         if (existingUser) {
-            res.status(200).json({ user: existingUser, isNew: false });
+            const userToken=jwt.sign({user:existingUser} , process.env.TOKEN_SECRET , {
+                expiresIn:"6h"
+            })
+
+            res.status(200).json({ token: userToken, isNew: false });
         } else {
             const spaceIndex = displayName.indexOf(' ');
 
@@ -22,11 +30,16 @@ exports.SocialAuth = async (req, res) => {
                 imageUrl,
                 socialType,
                 socialUid,
+                role:userRole
             });
 
             await newUser.save();
 
-            res.status(201).json({ user: newUser, isNew: true });
+            const userToken=jwt.sign({user:newUser} , process.env.TOKEN_SECRET , {
+                expiresIn:"6h"
+            })
+
+            res.status(200).json({ token:userToken, isNew: true });
         }
     } catch (err) {
         res.status(400).send(err);
