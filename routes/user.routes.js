@@ -1,6 +1,14 @@
 const { Router } = require('express');
 
-const { getUser, getUsers, createRole, deleteUser , forgotPassword , resetPassword , decodeToken } = require('../controllers/user.controller');
+
+const {
+    getUser,
+    getUsers,
+    createRole,
+    deleteUser,
+    forgotPassword,
+    resetPassword,
+} = require('../controllers/user.controller');
 
 const { roleMiddleware } = require('../middleware/roleMiddleware');
 

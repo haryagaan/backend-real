@@ -4,7 +4,7 @@ const passport = require('passport');
 
 const { body } = require('express-validator');
 
-const { Signup, Login } = require('../controllers/auth.controller');
+const { Signup, Login , VerifyPhone } = require('../controllers/auth.controller');
 
 const authRouter = express.Router();
 
@@ -18,6 +18,7 @@ authRouter
         Signup,
     )
 
-    .post('/login', Login);
+    .post('/login', Login)
+    .post("/verify/:id" , VerifyPhone)
 
 module.exports = authRouter;

@@ -102,8 +102,35 @@ exports.Login = async (req, res) => {
             expiresIn:"6h"
         })
 
-        res.status(200).json({ token: userToken });
+
+        res.status(200).json({ user:existingUser , token: userToken , isVerified:existingUser.isVerified });
+        
     } catch (err) {
         res.status(400).send(err);
     }
 };
+
+exports.VerifyPhone=async(req,res)=>{
+    const id=req.params.id;
+
+    try{
+        if(!id){
+            return res.status(400).send("Id required");
+        }
+
+        const existingUser=await User.findById(id);
+
+        if(!existingUser){
+            return res.status(404).send("User not found");
+        }
+
+        existingUser.isVerified=true;
+
+        await existingUser.save();
+
+        res.send("user verified")
+
+    }catch(err){
+        res.send(err);
+    }
+}
