@@ -102,7 +102,7 @@ exports.Login = async (req, res) => {
             expiresIn:"6h"
         })
 
-        res.status(200).json({ token: userToken });
+        res.status(200).json({ user:existingUser , token: userToken , isVerified:existingUser.isVerified });
     } catch (err) {
         res.status(400).send(err);
     }
