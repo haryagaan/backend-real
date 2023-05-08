@@ -1,7 +1,11 @@
 const jwt = require('jsonwebtoken');
 
 exports.authMiddleware = (req, res, next) => {
-    const token = req.headers.authorization ?? null;
+    const tokenBearer = req.headers.authorization ?? null;
+
+    const token=tokenBearer.slice(7,tokenBearer.length);
+
+    // console.log(token)
 
     if (!token) return res.send('Authorization token is required');
 

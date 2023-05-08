@@ -2,7 +2,10 @@ const jwt = require('jsonwebtoken');
 
 exports.roleMiddleware = (...allowedRoles) => {
     return (req, res, next) => {
-        const token = req.headers.authorization ?? null;
+        const tokenBearer = req.headers.authorization ?? null;
+        
+        const token=tokenBearer.slice(7,tokenBearer.length);
+
         if (!token) return res.send('Authorization token is required');
 
         try {
@@ -10,10 +13,10 @@ exports.roleMiddleware = (...allowedRoles) => {
 
             if (!payload) return res.send('Unauthorized');
 
-            // console.log(payload.existingUser.role.user);
+            console.log(payload.user.role.user);
 
             const rolesArray = allowedRoles;
-            const role = payload.existingUser.role.user;
+            const role = payload.user.role.user;
 
             if (!rolesArray.includes(role)) {
                 return res.send('Unauthorized');

@@ -102,6 +102,7 @@ exports.Login = async (req, res) => {
             expiresIn:"6h"
         })
 
+        // req.headers.authorization=userToken;
 
         res.status(200).json({ user:existingUser , token: userToken , isVerified:existingUser.isVerified });
         

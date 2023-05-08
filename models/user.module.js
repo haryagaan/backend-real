@@ -53,6 +53,11 @@ const userSchema = new Schema({
         default: 0,
     },
 
+    ratingCount:{
+        type:Number,
+        default:0,
+    },
+
     jobs: [{ type: Schema.Types.ObjectId, ref: 'jobs' }],
 
     notifications: [

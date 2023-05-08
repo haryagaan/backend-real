@@ -3,14 +3,14 @@ const { Job } = require('../models/job.module');
 const { JobCategory } = require('../models/jobCategory.module');
 
 exports.createCategory = async (req, res) => {
-    const { category } = req.body;
+    const { category , imageUrl } = req.body;
 
     try {
         if (!category) {
             return res.status(400).send('Category required');
         }
 
-        const newCategory = await JobCategory.create({ category });
+        const newCategory = await JobCategory.create({ category , imageUrl });
 
         await newCategory.save();
 

@@ -12,10 +12,22 @@ const jobSchema = new Schema({
         required: true,
     },
 
-    posts: [
+    imageUrl:{
+        type:String,
+        required:true
+    },
+
+    clientPosts: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'jobs-posts',
+            ref: 'jobs-posts-client',
+        },
+    ],
+
+    freelancerPosts:[
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'jobs-posts-freelancer',
         },
     ],
 
