@@ -87,7 +87,7 @@ exports.getSpecificJobClient=async(req,res)=>{
             return res.status(400).send("Job not found");
         }
 
-        let clientPosts=[{}];
+        let clientPosts=[];
 
         let basicClientPosts=await Job.findById(jobId).populate({path:"clientPosts" , populate:{path:"creatorId"}});
 

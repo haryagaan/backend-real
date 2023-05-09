@@ -16,6 +16,6 @@ jobRouter
     .post('/push/:category', roleMiddleware(999), createJobAndPushToCategory)
     .get("/get/:job" , getSpecificJob)
     .get("/get/client/:job" , getSpecificJobClient)
-    .get("/get/freelancer/:job" , getSpecificJobClient)
+    .get("/get/freelancer/:job" , getSpecificJobFreelancer)
     .get('/get', getJobs);
 module.exports = jobRouter;
