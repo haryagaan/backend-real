@@ -75,3 +75,36 @@ exports.createPostClient=async(req,res)=>{
         res.send(err);
     }
 }
+
+exports.getSpecificPostClient=async(req,res)=>{
+    const postId=req.params.id;
+
+    if(!postId){
+        return res.status(400).send("Post id required");
+    }
+
+    try{
+        const post=await JobPostClient.findById(postId);
+
+        if(!post){
+            return res.status(404).send("Post not found");
+        }
+
+        if(post.creatorId!=null){
+            const post=await JobPostClient.findById(postId).populate("creatorId");
+
+            const category=await JobPostClient.findById(postId).populate({path:"jobId" , populate:{path:"category"}})
+
+            res.status(200).json({category:category , post:post});
+        }else if(post.creatorSocialId!=null){
+            const post=await JobPostClient.findById(postId).populate("creatorSocialId");
+
+            const category=await JobPostClient.findById(postId).populate({path:"jobId" , populate:{path:"category"}})
+
+            res.status(200).json({category:category , post:post});
+        }
+
+    }catch(err){
+        res.send(err);
+    }
+}

@@ -75,3 +75,37 @@ exports.createPostFreelancer=async(req,res)=>{
         res.send(err);
     }
 }
+
+exports.getSpecificPostFreelancer=async(req,res)=>{
+    const postId=req.params.id;
+
+    if(!postId){
+        return res.status(400).send("Post id required");
+    }
+
+    try{
+        const post=await JobPostFreelancer.findById(postId);
+
+        if(!post){
+            return res.status(404).send("Post not found");
+        }
+
+        if(post.creatorId!=null){
+            const creator=await JobPostFreelancer.findById(postId).populate("creatorId");
+
+            const category=await JobPostFreelancer.findById(postId).populate({path:"jobId" , populate:{path:"category"}});
+
+            res.status(200).json({category:category , creator:creator.creatorId});
+        }else if(post.creatorSocialId!=null){
+            const creator=await JobPostFreelancer.findById(postId).populate("creatorSocialId");
+
+            const category=await JobPostFreelancer.findById(postId).populate({path:"jobId" , populate:{path:"category"}});
+
+            res.status(200).json({category:category , creator:creator.creatorSocialId});
+        }
+
+
+    }catch(err){
+        res.send(err);
+    }
+}
