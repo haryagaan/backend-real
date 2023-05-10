@@ -4,6 +4,10 @@ const mongoose = require('mongoose');
 
 const cors = require('cors');
 
+const multer=require("multer");
+
+const path=require("path")
+
 require('dotenv').config();
 
 const app = express();
@@ -64,6 +68,25 @@ app.use('/admin/', authMiddleware, adminJobRequestRouter);
 app.use('/post/', authMiddleware, jobPostClientRouter , jobPostFreelancerRouter);
 
 app.post("/decode/", decodeToken)
+
+//
+
+const fileStorageEngine=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null, path.join(__dirname, 'images'))
+    },
+
+    filename:(req,file,cb)=>{
+        cb(null, `${Date.now()}_${file.originalname}`)
+    }
+});
+
+const upload=multer({storage:fileStorageEngine});
+
+app.post("/single", upload.single("image") , (req,res)=>{
+    console.log(req.file)
+    res.send("Single image uploaded");
+})
 
 //
 

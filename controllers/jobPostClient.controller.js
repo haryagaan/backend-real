@@ -91,17 +91,17 @@ exports.getSpecificPostClient=async(req,res)=>{
         }
 
         if(post.creatorId!=null){
-            const post=await JobPostClient.findById(postId).populate("creatorId");
+            const creator=await JobPostClient.findById(postId).populate("creatorId");
 
             const category=await JobPostClient.findById(postId).populate({path:"jobId" , populate:{path:"category"}})
 
-            res.status(200).json({category:category , post:post});
+            res.status(200).json({category:category , creator:creator});
         }else if(post.creatorSocialId!=null){
-            const post=await JobPostClient.findById(postId).populate("creatorSocialId");
+            const creator=await JobPostClient.findById(postId).populate("creatorSocialId");
 
             const category=await JobPostClient.findById(postId).populate({path:"jobId" , populate:{path:"category"}})
 
-            res.status(200).json({category:category , post:post});
+            res.status(200).json({category:category , creator:creator});
         }
 
     }catch(err){
