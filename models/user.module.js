@@ -33,6 +33,12 @@ const userSchema = new Schema({
         default: 'https://api-private.atlassian.com/users/6b5c1609134a5887d7f3ab1b73557664/avatar',
     },
 
+    galleryUrls:[
+        {
+            type:String,
+        }
+    ],
+
     verificationMethod: {
         type: String,
     },
@@ -74,6 +80,11 @@ const userSchema = new Schema({
     forgotPasswordCode: {
         type: Number,
     },
+
+    createdAt:{
+        type:Date,
+        default:new Date(),
+    }
 });
 
 exports.User = model('users', userSchema);

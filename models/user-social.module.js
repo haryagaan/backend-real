@@ -21,6 +21,12 @@ const userSocialSchema = new Schema({
         required: true,
     },
 
+    galleryUrls:[
+        {
+            type:String,
+        }
+    ],
+
     socialType: {
         type: String,
         required: true,
@@ -54,6 +60,11 @@ const userSocialSchema = new Schema({
             type: Object,
         },
     ],
+
+    createdAt:{
+        type:Date,
+        default:new Date(),
+    }
 });
 
 exports.UserSocial = model('users-socials', userSocialSchema);

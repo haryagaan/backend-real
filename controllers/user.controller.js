@@ -20,9 +20,9 @@ exports.setProfileImage=async(req,res)=>{
     }
 
     try{
-        const id=jwt.verify(token , process.env.TOKEN_SECRET);
-        
-        console.log(id)
+        const payload=jwt.verify(token , process.env.TOKEN_SECRET);
+
+        const id=payload.user._id;
 
         const existingUser=await User.findById(id);
 
@@ -54,6 +54,54 @@ exports.setProfileImage=async(req,res)=>{
             res.send("Profile picture changed");
         }
 
+    }catch(err){
+        res.send(err);
+    }
+}
+
+exports.setGalleryImage=async(req,res)=>{
+    const token=req.params.token;
+
+    const {base64}=req.body;
+
+    if(!token || !base64){
+        return res.status(400).send("Token or image required");
+    }
+
+    try{
+        const payload=jwt.verify(token , process.env.TOKEN_SECRET);
+
+        const id=payload.user._id;
+
+        const existingUser=await User.findById(id);
+
+        const existingUserSocial=await UserSocial.findById(id);
+
+        if(!existingUser && !existingUserSocial){
+            return res.status(404).send("User doesnt exist");
+        }
+
+        if(existingUser){
+            const result=await cloudinary.uploader.upload(base64 , {
+                folder:"images"
+            });
+
+            existingUser.galleryUrls.push(result.secure_url);
+
+            await existingUser.save();
+
+            res.status(200).send("Added to gallery");
+        }else if(existingUserSocial){
+            const result=await cloudinary.uploader.upload(base64 , {
+                folder:"images"
+            });
+
+            existingUserSocial.galleryUrls.push(result.secure_url);
+
+            await existingUserSocial.save();
+
+            res.status(200).send("Added to gallery");
+        }
     }catch(err){
         res.send(err);
     }
@@ -303,3 +351,19 @@ exports.resetPassword = async (req, res) => {
         res.send(err);
     }
 };
+
+exports.returnIdFromToken=async(req,res)=>{
+    const token=req.params.token;
+
+    if(!token){
+        return res.status(400).send("Token required");
+    }
+
+    try{
+        const payload=jwt.verify(token , process.env.TOKEN_SECRET);
+
+        res.json(payload.user._id);
+    }catch(err){
+        res.send(err);
+    }
+}

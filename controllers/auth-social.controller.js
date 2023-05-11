@@ -15,9 +15,11 @@ exports.SocialAuth = async (req, res) => {
                 expiresIn:"6h"
             })
 
+            // const id=existingUser._id;
+
             // req.headers.authorization=userToken;
 
-            res.status(200).json({ token: userToken, isNew: false });
+            res.status(200).json({ token: userToken , isNew: false });
         } else {
             const spaceIndex = displayName.indexOf(' ');
 
@@ -36,6 +38,8 @@ exports.SocialAuth = async (req, res) => {
             });
 
             await newUser.save();
+
+            // const id=newUser._id;
 
             const userToken=jwt.sign({user:newUser} , process.env.TOKEN_SECRET , {
                 expiresIn:"6h"

@@ -94,17 +94,19 @@ exports.Login = async (req, res) => {
             return res.status(400).send('Password incorrect');
         }
 
-        existingUser.password = undefined;
+        // existingUser.password = undefined;
 
-        existingUser.forgotPasswordCode=undefined;
+        // existingUser.forgotPasswordCode=undefined;
+        // existingUser.firstName=undefined;
+        // existingUser.lastName=undefined
+
+        // const id=existingUser._id;
 
         const userToken=jwt.sign({user:existingUser} , process.env.TOKEN_SECRET , {
             expiresIn:"6h"
         })
 
-        // req.headers.authorization=userToken;
-
-        res.status(200).json({ user:existingUser , token: userToken , isVerified:existingUser.isVerified });
+        res.status(200).json({token: userToken , isVerified:existingUser.isVerified });
         
     } catch (err) {
         res.status(400).send(err);
