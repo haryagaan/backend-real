@@ -6,7 +6,11 @@ const cors = require('cors');
 
 const multer=require("multer");
 
-const path=require("path")
+const bodyParser = require('body-parser');
+
+const path=require("path");
+
+const fs=require("fs");
 
 require('dotenv').config();
 
@@ -47,7 +51,11 @@ const {decodeToken}=require("./decode/decode")
 
 //
 
-app.use(express.json());
+// app.use(express.json());
+
+app.use(express.json({limit: '100mb'}));
+
+app.use(express.urlencoded({limit: '100mb'}));
 
 app.use(cors());
 
@@ -67,26 +75,45 @@ app.use('/admin/', authMiddleware, adminJobRequestRouter);
 
 app.use('/post/', authMiddleware, jobPostClientRouter , jobPostFreelancerRouter);
 
-app.post("/decode/", decodeToken)
+app.post("/decode/", decodeToken);
 
-//
+//multer
 
-const fileStorageEngine=multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null, path.join(__dirname, 'images'))
-    },
+// const {Images}=require("./models/image.module");
 
-    filename:(req,file,cb)=>{
-        cb(null, `${Date.now()}_${file.originalname}`)
-    }
-});
+// const fileStorageEngine=multer.diskStorage({
+//     destination:(req,file,cb)=>{
+//         cb(null, path.join(__dirname, 'images'))
+//     },
 
-const upload=multer({storage:fileStorageEngine});
+//     filename:(req,file,cb)=>{
+//         // cb(null, `${Date.now()}_${file.originalname}`)
+//         cb(null, file.originalname)
+//     }
+// });
 
-app.post("/single", upload.single("image") , (req,res)=>{
-    console.log(req.file)
-    res.send("Single image uploaded");
-})
+// const upload=multer({
+//     storage:fileStorageEngine,
+//     // limits: { fileSize: maxSize }
+// });
+
+// app.post("/single", upload.single("image") , async(req,res)=>{
+//     const image=await Images.create({
+//         name:req.body.name,
+
+//         img:{
+//             data:fs.readFileSync(path.join(__dirname, 'images/') + req.file.filename),
+//             contentType:"image/png"
+//         }
+//     });
+//     res.send(image);
+// })
+
+// app.get("/images",async(req,res)=>{
+//     const images=await Images.find({});
+
+//     res.json(images)
+// })
 
 //
 

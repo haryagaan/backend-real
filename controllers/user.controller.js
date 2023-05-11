@@ -8,6 +8,57 @@ const { emailForgotPassword } = require('../email/emailForgotPassword');
 
 const jwt = require('jsonwebtoken');
 
+const {cloudinary}=require("../cloudinary");
+
+exports.setProfileImage=async(req,res)=>{
+    const token=req.params.token;
+
+    const {base64}=req.body;
+
+    if(!token || !base64){
+        return res.status(400).send("Token or image required");
+    }
+
+    try{
+        const id=jwt.verify(token , process.env.TOKEN_SECRET);
+        
+        console.log(id)
+
+        const existingUser=await User.findById(id);
+
+        const existingUserSocial=await UserSocial.findById(id);
+
+        if(!existingUser && !existingUserSocial){
+            return res.status(404).send("User not found");
+        }
+
+        if(existingUser){
+            const result=await cloudinary.uploader.upload(base64 , {
+                folder:"images"
+            });
+        
+            existingUser.imageUrl=result.secure_url;
+
+            await existingUser.save();
+
+            res.send("Profile picture changed");
+        }else if(existingUserSocial){
+            const result=await cloudinary.uploader.upload(image , {
+                folder:"images"
+            });
+        
+            existingUserSocial.imageUrl=result.secure_url;
+
+            await existingUserSocial.save();
+
+            res.send("Profile picture changed");
+        }
+
+    }catch(err){
+        res.send(err);
+    }
+}
+
 exports.getUsers = async (req, res) => {
     try {
         const users = await User.find({});
@@ -161,7 +212,7 @@ exports.forgotPassword = async (req, res) => {
 
         const payload = jwt.verify(token, process.env.TOKEN_SECRET, (err, item) => {
             if (!err) {
-                return item.existingUser;
+                return item.user;
             } else {
                 return res.status(400).send('Invalid token');
             }
@@ -211,7 +262,7 @@ exports.resetPassword = async (req, res) => {
 
         const payload = jwt.verify(token, process.env.TOKEN_SECRET, (err, item) => {
             if (!err) {
-                return item.existingUser;
+                return item.user;
             } else {
                 return res.status(400).send('Invalid token');
             }
