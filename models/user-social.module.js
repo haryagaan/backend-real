@@ -27,6 +27,11 @@ const userSocialSchema = new Schema({
         }
     ],
 
+    infoText:{
+        type:String,
+        default:"My info ..."
+    },
+
     socialType: {
         type: String,
         required: true,

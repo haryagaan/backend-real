@@ -94,9 +94,9 @@ exports.Login = async (req, res) => {
             return res.status(400).send('Password incorrect');
         }
 
-        // existingUser.password = undefined;
+        existingUser.password = undefined;
 
-        // existingUser.forgotPasswordCode=undefined;
+        existingUser.forgotPasswordCode=undefined;
         // existingUser.firstName=undefined;
         // existingUser.lastName=undefined
 
@@ -106,7 +106,7 @@ exports.Login = async (req, res) => {
             expiresIn:"6h"
         })
 
-        res.status(200).json({token: userToken , isVerified:existingUser.isVerified });
+        res.status(200).json({token: userToken , user:existingUser , isVerified:existingUser.isVerified });
         
     } catch (err) {
         res.status(400).send(err);

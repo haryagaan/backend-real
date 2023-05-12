@@ -82,25 +82,89 @@ exports.setGalleryImage=async(req,res)=>{
         }
 
         if(existingUser){
-            const result=await cloudinary.uploader.upload(base64 , {
-                folder:"images"
-            });
+            if(existingUser.galleryUrls.length<4){
+                const result=await cloudinary.uploader.upload(base64 , {
+                    folder:"images"
+                });
+    
+                existingUser.galleryUrls.push(result.secure_url);
+    
+                await existingUser.save();
+    
+                res.status(200).send("Added to gallery");
+            }else if(existingUser.galleryUrls.length>=4){
+                const result=await cloudinary.uploader.upload(base64 , {
+                    folder:"images"
+                });
 
-            existingUser.galleryUrls.push(result.secure_url);
+                existingUser.galleryUrls[0]=result.secure_url;
+
+                await existingUser.save();
+
+                res.status(200).send("Replaced with existing pic")
+            }
+        }else if(existingUserSocial){
+            if(existingUserSocial.galleryUrls.length<4){
+                const result=await cloudinary.uploader.upload(base64 , {
+                    folder:"images"
+                });
+    
+                existingUserSocial.galleryUrls.push(result.secure_url);
+    
+                await existingUserSocial.save();
+    
+                res.status(200).send("Added to gallery");
+            }else if(existingUserSocial.galleryUrls.length>=4){
+                const result=await cloudinary.uploader.upload(base64 , {
+                    folder:"images"
+                });
+
+                existingUserSocial.galleryUrls[0]=result.secure_url;
+
+                await existingUserSocial.save();
+
+                res.status(200).send("Replaced with existing pic")
+            }
+        }
+    }catch(err){
+        res.send(err);
+    }
+}
+
+exports.changeUserInfo=async(req,res)=>{
+    const token=req.params.token;
+
+    const {info}=req.body; 
+
+    if(!token || !info){
+        return res.status(400).send("Token or info required");
+    }
+
+    try{
+        const payload=jwt.verify(token , process.env.TOKEN_SECRET);
+
+        const id=payload.user._id;
+
+        const existingUser=await User.findById(id);
+
+        const existingUserSocial=await UserSocial.findById(id);
+
+        if(!existingUser && !existingUserSocial){
+            return res.status(404).send("User not found");
+        }
+
+        if(existingUser){
+            existingUser.infoText=info;
 
             await existingUser.save();
 
-            res.status(200).send("Added to gallery");
+            res.status(200).send("Info changed");
         }else if(existingUserSocial){
-            const result=await cloudinary.uploader.upload(base64 , {
-                folder:"images"
-            });
-
-            existingUserSocial.galleryUrls.push(result.secure_url);
+            existingUserSocial.infoText=info;
 
             await existingUserSocial.save();
 
-            res.status(200).send("Added to gallery");
+            res.status(200).send("Info changed")
         }
     }catch(err){
         res.send(err);

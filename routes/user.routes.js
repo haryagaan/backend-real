@@ -10,7 +10,8 @@ const {
     resetPassword,
     setProfileImage,
     returnIdFromToken,
-    setGalleryImage
+    setGalleryImage,
+    changeUserInfo
 } = require('../controllers/user.controller');
 
 const { roleMiddleware } = require('../middleware/roleMiddleware');
@@ -25,6 +26,7 @@ userRouter
     .post('/reset/password/:id', resetPassword)
     .post("/image/profile/:token" , setProfileImage)
     .post("/image/gallery/:token" , setGalleryImage)
+    .post("/change/info/:token" ,changeUserInfo)
     .post("/return/id/:token" , returnIdFromToken)
     .delete('/:id', roleMiddleware(999), deleteUser);
 

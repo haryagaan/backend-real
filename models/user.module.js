@@ -39,6 +39,11 @@ const userSchema = new Schema({
         }
     ],
 
+    infoText:{
+        type:String,
+        default:"My info ..."
+    },
+
     verificationMethod: {
         type: String,
     },
