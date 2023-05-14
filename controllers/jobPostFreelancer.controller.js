@@ -6,16 +6,18 @@ const {User}=require("../models/user.module");
 
 const {UserSocial}=require("../models/user-social.module");
 
+const {cloudinary}=require("../cloudinary")
+
 exports.createPostFreelancer=async(req,res)=>{
     const id=req.params.id;
 
     const jobId=req.params.job;
 
     const {
-        title,mainText,imageUrl,price
+        title,mainText,base64,price
     }=req.body;
 
-    if(!title || !mainText || !imageUrl || !price){
+    if(!title || !mainText || !base64 || !price){
         return res.status(200).send("Failed");
     }
 
@@ -39,10 +41,14 @@ exports.createPostFreelancer=async(req,res)=>{
 
     try{
         if(existingUser && !existingUserSocial){
+            const result=await cloudinary.uploader.upload(base64 , {
+                folder:"images"
+            });
+
             const newPostFreelancer=await JobPostFreelancer.create({
                 title,
                 mainText,
-                imageUrl,
+                imageUrl:result.secure_url,
                 price,
                 jobId,
                 creatorId:id,
@@ -55,10 +61,14 @@ exports.createPostFreelancer=async(req,res)=>{
 
             res.status(200).json(newPostFreelancer);
         }else if(existingUserSocial && !existingUser){
+            const result=await cloudinary.uploader.upload(base64 , {
+                folder:"images"
+            });
+
             const newPostFreelancer=await JobPostFreelancer.create({
                 title,
                 mainText,
-                imageUrl,
+                imageUrl:result.secure_url,
                 price,
                 jobId,
                 creatorId:null,
