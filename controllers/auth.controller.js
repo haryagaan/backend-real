@@ -116,9 +116,11 @@ exports.Login = async (req, res) => {
 exports.VerifyPhone=async(req,res)=>{
     const id=req.params.id;
 
+    const {phone}=req.body;
+
     try{
-        if(!id){
-            return res.status(400).send("Id required");
+        if(!id || !phone){
+            return res.status(400).send("Id or phone required");
         }
 
         const existingUser=await User.findById(id);
@@ -128,6 +130,8 @@ exports.VerifyPhone=async(req,res)=>{
         }
 
         existingUser.isVerified=true;
+
+        existingUser.phoneInfo=phone;
 
         await existingUser.save();
 

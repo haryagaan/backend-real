@@ -41,14 +41,20 @@ exports.createPostFreelancer=async(req,res)=>{
 
     try{
         if(existingUser && !existingUserSocial){
-            const result=await cloudinary.uploader.upload(base64 , {
-                folder:"images"
-            });
+            let imageUrls=[];
+
+            for(let i=0; i<base64.length ; i++){
+                const result=await cloudinary.uploader.upload(base64[i] , {
+                    folder:"images"
+                });
+
+                imageUrls.push(result.secure_url);
+            }
 
             const newPostFreelancer=await JobPostFreelancer.create({
                 title,
                 mainText,
-                imageUrl:result.secure_url,
+                imageUrl:imageUrls,
                 price,
                 jobId,
                 creatorId:id,
@@ -61,14 +67,20 @@ exports.createPostFreelancer=async(req,res)=>{
 
             res.status(200).json(newPostFreelancer);
         }else if(existingUserSocial && !existingUser){
-            const result=await cloudinary.uploader.upload(base64 , {
-                folder:"images"
-            });
+            let imageUrls=[];
+
+            for(let i=0; i<base64.length ; i++){
+                const result=await cloudinary.uploader.upload(base64[i] , {
+                    folder:"images"
+                });
+
+                imageUrls.push(result.secure_url);
+            }
 
             const newPostFreelancer=await JobPostFreelancer.create({
                 title,
                 mainText,
-                imageUrl:result.secure_url,
+                imageUrl:imageUrls,
                 price,
                 jobId,
                 creatorId:null,

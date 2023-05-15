@@ -37,6 +37,10 @@ exports.SocialAuth = async (req, res) => {
                 role:userRole
             });
 
+            if(socialType=="Google"){
+                newUser.googleInfo=email;
+            }
+
             await newUser.save();
 
             // const id=newUser._id;

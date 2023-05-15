@@ -32,6 +32,26 @@ const userSocialSchema = new Schema({
         default:"My info ..."
     },
 
+    facebookInfo:{
+        type:String,
+        default:"*********"
+    },
+
+    instagramInfo:{
+        type:String,
+        default:"*********"
+    },
+    
+    googleInfo:{
+        type:String,
+        default:"*********"
+    },
+
+    phoneInfo:{
+        type:String,
+        default:"*********"
+    },
+
     socialType: {
         type: String,
         required: true,

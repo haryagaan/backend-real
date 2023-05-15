@@ -6,12 +6,16 @@ const { roleMiddleware } = require('../middleware/roleMiddleware');
 
 const {
     createPostClient,
-    getSpecificPostClient
+    getSpecificPostClient,
+    LikeClientPost,
+    DislikeClientPost,
 }=require("../controllers/jobPostClient.controller")
 
 const jobPostClientRouter = express.Router();
 
 jobPostClientRouter
     .post("/client/:id/:job" , createPostClient)
-    .get("/client/:id",getSpecificPostClient)
+    .post("/client/like/:id/:post" , LikeClientPost)
+    .post("/client/dislike/:id/:post" , DislikeClientPost)
+    .get("/client/:id/:post",getSpecificPostClient)
 module.exports = jobPostClientRouter;

@@ -11,9 +11,9 @@ const jobPostFreelancerSchema = new Schema({
         required:true
     },
 
-    imageUrl:{
+    imageUrl:[{
         type:String,
-    },
+    }],
 
     price:{
         type:Number,
@@ -35,6 +35,18 @@ const jobPostFreelancerSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:"users-socials"
     },
+
+    totalReacts:[{
+        type:Schema.Types.ObjectId,
+    }],
+
+    likes:[{
+        type:Schema.Types.ObjectId,
+    }],
+
+    dislikes:[{
+        type:Schema.Types.ObjectId,
+    }],
 
 });
 
