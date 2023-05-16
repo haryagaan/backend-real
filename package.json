@@ -19,6 +19,7 @@
         "cors": "^2.8.5",
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
+        "express-handlebars": "^7.0.7",
         "express-session": "^1.17.3",
         "express-validator": "^6.15.0",
         "fs": "^0.0.1-security",
@@ -40,5 +41,5 @@
     },
     "engines": {
         "node": ">=14 <15"
-      }
+    }
 }
