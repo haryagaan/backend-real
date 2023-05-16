@@ -122,22 +122,18 @@ exports.getSpecificPostClient=async(req,res)=>{
             return res.status(404).send("Post not found");
         }
 
-        const isLiked=post.likes.indexOf(id);
-
-        const isDisliked=post.dislikes.indexOf(id);
-
         if(post.creatorId!=null){
             const creator=await JobPostClient.findById(postId).populate("creatorId");
 
             const category=await JobPostClient.findById(postId).populate({path:"jobId" , populate:{path:"category"}})
 
-            res.status(200).json({category:category , creator:creator.creatorId , liked:isLiked , disliked:isDisliked});
+            res.status(200).json({category:category , creator:creator.creatorId});
         }else if(post.creatorSocialId!=null){
             const creator=await JobPostClient.findById(postId).populate("creatorSocialId");
 
             const category=await JobPostClient.findById(postId).populate({path:"jobId" , populate:{path:"category"}})
 
-            res.status(200).json({category:category , creator:creator.creatorSocialId , liked:isLiked , disliked:isDisliked});
+            res.status(200).json({category:category , creator:creator.creatorSocialId});
         }
 
     }catch(err){
