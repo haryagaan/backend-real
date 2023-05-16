@@ -9,6 +9,7 @@ const {
     getSpecificPostClient,
     LikeClientPost,
     DislikeClientPost,
+    LikedOrDislikedClient
 }=require("../controllers/jobPostClient.controller")
 
 const jobPostClientRouter = express.Router();
@@ -17,5 +18,6 @@ jobPostClientRouter
     .post("/client/:id/:job" , createPostClient)
     .post("/client/like/:id/:post" , LikeClientPost)
     .post("/client/dislike/:id/:post" , DislikeClientPost)
-    .get("/client/:id/:post",getSpecificPostClient)
+    .get("/client/react/:id/:post", LikedOrDislikedClient)
+    .get("/client/:post",getSpecificPostClient)
 module.exports = jobPostClientRouter;
