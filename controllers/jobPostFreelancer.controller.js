@@ -99,23 +99,13 @@ exports.createPostFreelancer=async(req,res)=>{
 }
 
 exports.getSpecificPostFreelancer=async(req,res)=>{
-    const id=req.params.id;
-
     const postId=req.params.post;
 
-    if(!postId || !id){
+    if(!postId){
         return res.status(400).send("Failed");
     }
 
     try{
-        const existingUser=await User.findById(id);
-
-        const existingUserSocial=await UserSocial.findById(id);
-
-        if(!existingUser && !existingUserSocial){
-            return res.status(404).send("User not found");
-        }
-
         const post=await JobPostFreelancer.findById(postId);
 
         if(!post){
@@ -184,9 +174,11 @@ exports.LikeFreelancerPost=async(req,res)=>{
         }else if(liked==-1){
             const indexDisliked=freelancerPost.dislikes.indexOf(id);
 
-            freelancerPost.dislikes.splice(indexDisliked , 1);
-
-            freelancerPost.likes.push(id);
+            if(indexDisliked!=-1){
+                freelancerPost.dislikes.splice(indexDisliked , 1);
+            }else if(indexDisliked==-1){
+                freelancerPost.likes.push(id);
+            }
 
             freelancerPost.totalReacts.push(id);
 
@@ -212,7 +204,7 @@ exports.DislikeFreelancerPost=async(req,res)=>{
         return res.status(404).send("Couldnt find user");
     }
 
-    const freelancerPost=await JobPostClient.findById(freelancerPostId);
+    const freelancerPost=await JobPostFreelancer.findById(freelancerPostId);
 
     if(!freelancerPost){
         return res.status(404).send("Post not found");
@@ -241,9 +233,11 @@ exports.DislikeFreelancerPost=async(req,res)=>{
         }else if(dislike==-1){
             const indexLike=freelancerPost.likes.indexOf(id);
 
-            freelancerPost.likes.splice(indexLike , 1);
-
-            freelancerPost.totalReacts.push(id);
+            if(indexLike!=-1){
+                freelancerPost.likes.splice(indexLike , 1);
+            }else if(indexLike==-1){
+                freelancerPost.totalReacts.push(id);
+            }
 
             freelancerPost.dislikes.push(id);
 
@@ -253,5 +247,39 @@ exports.DislikeFreelancerPost=async(req,res)=>{
         }
     }catch(err){
         res.send(err);
+    }
+}
+
+exports.LikedOrDislikedFreelancer=async(req,res)=>{
+    const id=req.params.id;
+
+    const postId=req.params.post;
+
+    if(!id || !postId){
+        return res.status(400).send("Failed");
+    }
+
+    const existingUser=await User.findById(id);
+
+    const existingUserSocial=await UserSocial.findById(id);
+
+    if(!existingUser && !existingUserSocial){
+        return res.status(404).send("User not found");
+    }
+
+    const post=await JobPostFreelancer.findById(postId);
+
+    if(!post){
+        return res.status(404).send("Post not found");
+    }
+    
+    try{
+        const indexLike=post.likes.indexOf(id);
+
+        const indexDislike=post.dislikes.indexOf(id);
+        
+        res.status(200).json({liked:indexLike , disiked:indexDislike})
+    }catch(err){
+        res.send(err)
     }
 }

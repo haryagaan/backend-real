@@ -99,23 +99,13 @@ exports.createPostClient=async(req,res)=>{
 }
 
 exports.getSpecificPostClient=async(req,res)=>{
-    const id=req.params.id;
-
     const postId=req.params.post;
 
-    if(!postId || !id){
+    if(!postId){
         return res.status(400).send("Failed");
     }
 
     try{
-        const existingUser=await User.findById(id);
-
-        const existingUserSocial=await UserSocial.findById(id);
-
-        if(!existingUser && !existingUserSocial){
-            return res.status(404).send("User not found");
-        }
-
         const post=await JobPostClient.findById(postId);
 
         if(!post){
@@ -183,11 +173,13 @@ exports.LikeClientPost=async(req,res)=>{
         }else if(liked==-1){
             const indexDisliked=clientPost.dislikes.indexOf(id);
 
-            clientPost.dislikes.splice(indexDisliked , 1);
+            if(indexDisliked!=-1){
+                clientPost.dislikes.splice(indexDisliked , 1);
+            }else if(indexDisliked==-1){
+                clientPost.totalReacts.push(id);
+            }
 
             clientPost.likes.push(id);
-
-            clientPost.totalReacts.push(id);
 
             await clientPost.save();
 
@@ -240,9 +232,11 @@ exports.DislikeClientPost=async(req,res)=>{
         }else if(dislike==-1){
             const indexLike=clientPost.likes.indexOf(id);
 
-            clientPost.likes.splice(indexLike , 1);
-
-            clientPost.totalReacts.push(id);
+            if(indexLike!=-1){
+                clientPost.likes.splice(indexLike , 1);
+            }else if(indexLike==-1){
+                clientPost.totalReacts.push(id);
+            }
 
             clientPost.dislikes.push(id);
 
@@ -252,5 +246,39 @@ exports.DislikeClientPost=async(req,res)=>{
         }
     }catch(err){
         res.send(err);
+    }
+}
+
+exports.LikedOrDislikedClient=async(req,res)=>{
+    const id=req.params.id;
+
+    const postId=req.params.post;
+
+    if(!id || !postId){
+        return res.status(400).send("Failed");
+    }
+
+    const existingUser=await User.findById(id);
+
+    const existingUserSocial=await UserSocial.findById(id);
+
+    if(!existingUser && !existingUserSocial){
+        return res.status(404).send("User not found");
+    }
+
+    const post=await JobPostClient.findById(postId);
+
+    if(!post){
+        return res.status(404).send("Post not found");
+    }
+    
+    try{
+        const indexLike=post.likes.indexOf(id);
+
+        const indexDislike=post.dislikes.indexOf(id);
+
+        res.status(200).json({liked:indexLike , disiked:indexDislike})
+    }catch(err){
+        res.send(err)
     }
 }
