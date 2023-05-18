@@ -177,10 +177,10 @@ exports.LikeFreelancerPost=async(req,res)=>{
             if(indexDisliked!=-1){
                 freelancerPost.dislikes.splice(indexDisliked , 1);
             }else if(indexDisliked==-1){
-                freelancerPost.likes.push(id);
+                freelancerPost.totalReacts.push(id);
             }
 
-            freelancerPost.totalReacts.push(id);
+            freelancerPost.likes.push(id);
 
             await freelancerPost.save();
 

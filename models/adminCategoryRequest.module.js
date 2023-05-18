@@ -1,20 +1,14 @@
 const { Schema, Types, model } = require('mongoose');
 
-const adminJobRequestSchema = new Schema({
-    jobName: {
-        type: String,
-        required: true,
-    },
+const adminCategoryRequestSchema = new Schema({
+   category:{
+    type:String,
+    required:true,
+   },
 
-    category: {
-        type: Schema.Types.ObjectId,
-        ref: 'jobs-categories',
-        required: true,
-    },
-
-    text:{
-        type:String,
-    },
+   text:{
+    type:String,
+   },
 
     createdAt: {
         type: Date,
@@ -39,4 +33,4 @@ const adminJobRequestSchema = new Schema({
     },
 });
 
-exports.AdminJobRequest = model('admin-job-requests', adminJobRequestSchema);
+exports.AdminCategoryRequest = model('admin-category-requests', adminCategoryRequestSchema);

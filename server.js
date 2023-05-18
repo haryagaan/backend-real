@@ -38,7 +38,7 @@ const jobRouter = require('./routes/job.routes');
 
 const jobCategoryRouter = require('./routes/jobCategory.routes');
 
-const adminJobRequestRouter = require('./routes/adminJobRequest.routes');
+const adminRequestRouter = require('./routes/adminRequest.routes');
 
 const jobPostClientRouter=require("./routes/jobPostClient.routes");
 
@@ -71,7 +71,7 @@ app.use('/job/', authMiddleware, jobRouter);
 
 app.use('/category/', authMiddleware, jobCategoryRouter);
 
-app.use('/admin/', authMiddleware, adminJobRequestRouter);
+app.use('/admin/', authMiddleware, adminRequestRouter);
 
 app.use('/post/', authMiddleware, jobPostClientRouter , jobPostFreelancerRouter);
 
