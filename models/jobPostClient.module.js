@@ -48,6 +48,11 @@ const jobPostClientSchema = new Schema({
         type:Schema.Types.ObjectId,
     }],
 
+    comments:[{
+        type:Schema.Types.ObjectId,
+        ref:"comments",
+    }]
+
 });
 
 exports.JobPostClient = model('jobs-posts-client', jobPostClientSchema);

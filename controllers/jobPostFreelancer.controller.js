@@ -6,7 +6,11 @@ const {User}=require("../models/user.module");
 
 const {UserSocial}=require("../models/user-social.module");
 
+const {Comment}=require("../models/comment.module")
+
 const {cloudinary}=require("../cloudinary");
+
+const jwt=require("jsonwebtoken")
 
 exports.createPostFreelancer=async(req,res)=>{
     const id=req.params.id;
@@ -281,5 +285,87 @@ exports.LikedOrDislikedFreelancer=async(req,res)=>{
         res.status(200).json({liked:indexLike , disiked:indexDislike})
     }catch(err){
         res.send(err)
+    }
+}
+
+exports.writeCommentFreelancer=async(req,res)=>{
+    const token=req.params.token;
+
+    const postId=req.params.post;
+
+    const {text}=req.body;
+
+    if(!token || !postId || !text){
+        return res.status(400).send("Failed");
+    }
+
+    try{
+        const payload=jwt.verify(token , process.env.TOKEN_SECRET);
+
+        const id=payload.user._id;
+
+        const existingUser=await User.findById(id);
+
+        const existingUserSocial=await UserSocial.findById(id);
+
+        if(!existingUser && !existingUserSocial){
+            return res.status(404).send("User not found");
+        }
+
+        const post=await JobPostFreelancer.findById(postId);
+
+        if(!post){
+            return res.status(404).send("Post not found");
+        }
+
+        const newComment=await Comment.create({
+            creatorId:id,
+            creatorSocialId:id,
+            text,
+        });
+
+        post.comments.push(newComment._id);
+
+        await post.save();
+
+        res.status(200).json(post);
+    }catch(err){
+        res.send(err);
+    }
+}
+
+exports.getCommentsFreelancer=async(req,res)=>{
+    const postId=req.params.post
+
+    if(!postId){
+        return res.status(400).send("Failed");
+    }
+
+    try{
+        let comments=[]
+
+        const postSocial=await JobPostFreelancer.findById(postId).populate({path:"comments" , populate:{path:"creatorSocialId"}});
+
+        const postBasic=await JobPostFreelancer.findById(postId).populate({path:"comments" , populate:{path:"creatorId"}});
+
+        if(!postSocial && !postBasic){
+            return res.status(404).send("Post not found");
+        }
+
+        for(let i=0;i<postBasic.comments.length;i++){
+            if(postBasic.comments[i].creatorId!=null){
+                comments.push(postBasic.comments[i])
+            }
+        }
+
+        for(let i=0;i<postSocial.comments.length;i++){
+            if(postSocial.comments[i].creatorSocialId!=null){
+                comments.push(postSocial.comments[i])
+            }
+        }
+
+        res.status(200).json(comments);
+    }catch(err){
+        res.send(err);
     }
 }

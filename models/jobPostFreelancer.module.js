@@ -48,6 +48,11 @@ const jobPostFreelancerSchema = new Schema({
         type:Schema.Types.ObjectId,
     }],
 
+    comments:[{
+        type:Schema.Types.ObjectId,
+        ref:"comments",
+    }]
+
 });
 
 exports.JobPostFreelancer = model('jobs-posts-freelancer', jobPostFreelancerSchema);
