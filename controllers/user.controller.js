@@ -431,3 +431,224 @@ exports.returnIdFromToken=async(req,res)=>{
         res.send(err);
     }
 }
+
+exports.LikeUser=async(req,res)=>{
+    const id=req.params.id;
+
+    const userId=req.params.user;
+
+    if(!id || !userId){
+        return res.status(400).send("Failed");
+    }
+
+    if(id==userId){
+        return res.status(400).send("You cant Like to your own profile")
+    }
+
+    const existingAcc=await User.findById(userId);
+
+    const existingAccSocial=await UserSocial.findById(userId);
+
+    if(!existingAcc && !existingAccSocial){
+        return res.status(404).send("Account not found");
+    }
+
+    try{
+        if(existingAcc && !existingAccSocial){
+            const indexLiked=existingAcc.likes.indexOf(id);
+
+            const indexDisliked=existingAcc.dislikes.indexOf(id);
+
+            const indexTotalReacts=existingAcc.totalReacts.indexOf(id);
+
+            if(indexLiked==-1){
+                //no like from the start
+
+                if(indexDisliked==-1){
+                    existingAcc.totalReacts.splice(indexTotalReacts , 1);
+
+                    existingAcc.likes.push(id);
+
+                    existingAcc.totalReacts.push(id);
+
+                    await existingAcc.save();
+
+                    res.status(200).send("Like added");
+                }else if(indexDisliked!=-1){
+                    existingAcc.totalReacts.splice(indexTotalReacts , 1);
+
+                    existingAcc.dislikes.splice(indexDisliked , 1);
+
+                    existingAcc.likes.push(id);
+
+                    existingAcc.totalReacts.push(id);
+
+                    await existingAcc.save();
+
+                    res.status(200).send("Like added");
+                }
+
+            }else if(indexLiked!=-1){
+                //likes from the start
+                existingAcc.totalReacts.splice(indexTotalReacts , 1);
+
+                existingAcc.likes.splice(indexLiked , 1);
+
+                await existingAcc.save();
+
+                res.status(200).send("Like added");
+            }
+        }else if(existingAccSocial && !existingAcc){
+            const indexLiked=existingAccSocial.likes.indexOf(id);
+
+            const indexDisliked=existingAccSocial.dislikes.indexOf(id);
+
+            const indexTotalReacts=existingAccSocial.totalReacts.indexOf(id);
+
+            if(indexLiked==-1){
+                //no like from the start
+
+                if(indexDisliked==-1){
+                    existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
+
+                    existingAccSocial.likes.push(id);
+
+                    existingAccSocial.totalReacts.push(id);
+
+                    await existingAccSocial.save();
+
+                    res.status(200).send("Like added");
+                }else if(indexDisliked!=-1){
+                    existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
+
+                    existingAccSocial.dislikes.splice(indexDisliked , 1);
+
+                    existingAccSocial.likes.push(id);
+
+                    existingAccSocial.totalReacts.push(id);
+
+                    await existingAccSocial.save();
+
+                    res.status(200).send("Like added");
+                }
+
+            }else if(indexLiked!=-1){
+                //likes from the start
+                existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
+
+                existingAccSocial.likes.splice(indexLiked , 1);
+
+                await existingAccSocial.save();
+
+                res.status(200).send("Like added");
+            }
+        }
+    }catch(err){
+        res.send(err);
+    }
+}
+
+exports.DislikeUser=async(req,res)=>{
+    const id=req.params.id;
+
+    const userId=req.params.user;
+
+    if(!id || !userId){
+        return res.status(400).send("Failed");
+    }
+
+    
+    if(id==userId){
+        return res.status(400).send("You cant dislike to your own profile")
+    }
+
+    const existingAcc=await User.findById(userId);
+
+    const existingAccSocial=await UserSocial.findById(userId);
+
+    if(!existingAcc && !existingAccSocial){
+        return res.status(404).send("Account not found");
+    }
+
+    try{
+        if(existingAcc && !existingAccSocial){
+            const indexLiked=existingAcc.likes.indexOf(id);
+
+            const indexDisliked=existingAcc.dislikes.indexOf(id);
+
+            const indexTotalReacts=existingAcc.totalReacts.indexOf(id);
+
+            if(indexDisliked==-1){
+                //no dislike from the start
+                if(indexLiked==-1){
+                    existingAcc.totalReacts.splice(indexTotalReacts , 1);
+
+                    existingAcc.dislikes.push(id);
+
+                    existingAcc.totalReacts.push(id);
+
+                    await existingAcc.save();
+
+                    res.status(200).send("Dislike added");
+                }else if(indexLiked!=-1){
+                    existingAcc.likes.splice(indexLiked , 1);
+
+                    existingAcc.dislikes.push(id);
+
+                    await existingAcc.save();
+
+                    res.status(200).send("Dislike added");
+                }
+            }else if(indexDisliked!=-1){
+                //disliked from the start
+                existingAcc.totalReacts.splice(indexTotalReacts , 1);
+
+                existingAcc.dislikes.splice(indexDisliked , 1);
+
+                await existingAcc.save();
+
+                res.status(200).send("Dislike added");
+            }
+        }else if(existingAccSocial && !existingAcc){
+            const indexLiked=existingAccSocial.likes.indexOf(id);
+
+            const indexDisliked=existingAccSocial.dislikes.indexOf(id);
+
+            const indexTotalReacts=existingAccSocial.totalReacts.indexOf(id);
+
+            if(indexDisliked==-1){
+                //no dislike from the start
+                if(indexLiked==-1){
+                    existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
+
+                    existingAccSocial.dislikes.push(id);
+
+                    existingAccSocial.totalReacts.push(id);
+
+                    await existingAccSocial.save();
+
+                    res.status(200).send("Dislike added");
+                }else if(indexLiked!=-1){
+                    existingAccSocial.likes.splice(indexLiked , 1);
+
+                    existingAccSocial.dislikes.push(id);
+
+                    await existingAccSocial.save();
+
+                    res.status(200).send("Dislike added");
+                }
+            }else if(indexDisliked!=-1){
+                //disliked from the start
+                existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
+
+                existingAccSocial.dislikes.splice(indexDisliked , 1);
+
+                await existingAccSocial.save();
+
+                res.status(200).send("Dislike added");
+            }
+        }
+    }catch(err){
+        res.send(err);
+    }
+}

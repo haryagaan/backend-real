@@ -11,7 +11,9 @@ const {
     setProfileImage,
     returnIdFromToken,
     setGalleryImage,
-    changeUserInfo
+    changeUserInfo,
+    LikeUser,
+    DislikeUser
 } = require('../controllers/user.controller');
 
 const { roleMiddleware } = require('../middleware/roleMiddleware');
@@ -28,6 +30,8 @@ userRouter
     .post("/image/gallery/:token" , setGalleryImage)
     .post("/change/info/:token" ,changeUserInfo)
     .post("/return/id/:token" , returnIdFromToken)
+    .post("/like/:id/:user" , LikeUser)
+    .post("/dislike/:id/:user" , DislikeUser)
     .delete('/:id', roleMiddleware(999), deleteUser);
 
 module.exports = userRouter;

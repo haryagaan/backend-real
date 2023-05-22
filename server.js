@@ -42,7 +42,9 @@ const adminRequestRouter = require('./routes/adminRequest.routes');
 
 const jobPostClientRouter=require("./routes/jobPostClient.routes");
 
-const jobPostFreelancerRouter=require("./routes/jobPostFreelancer.routes")
+const jobPostFreelancerRouter=require("./routes/jobPostFreelancer.routes");
+
+const commentRouter=require("./routes/comment.routes")
 
 
 const { authMiddleware } = require('./middleware/authMiddleware');
@@ -74,6 +76,8 @@ app.use('/category/', authMiddleware, jobCategoryRouter);
 app.use('/admin/', authMiddleware, adminRequestRouter);
 
 app.use('/post/', authMiddleware, jobPostClientRouter , jobPostFreelancerRouter);
+
+app.use("/comment/", authMiddleware , commentRouter)
 
 app.post("/decode/", decodeToken);
 

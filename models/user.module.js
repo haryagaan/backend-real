@@ -79,15 +79,15 @@ const userSchema = new Schema({
         required: true,
     },
 
-    rating: {
-        type: Number,
-        default: 0,
-    },
+    // rating: {
+    //     type: Number,
+    //     default: 0,
+    // },
 
-    ratingCount:{
-        type:Number,
-        default:0,
-    },
+    // ratingCount:{
+    //     type:Number,
+    //     default:0,
+    // },
 
     jobs: [{ type: Schema.Types.ObjectId, ref: 'jobs' }],
 
@@ -109,7 +109,19 @@ const userSchema = new Schema({
     createdAt:{
         type:Date,
         default:new Date(),
-    }
+    },
+
+    likes:[{
+        type:Schema.Types.ObjectId,
+    }],
+
+    dislikes:[{
+        type:Schema.Types.ObjectId,
+    }],
+
+    totalReacts:[{
+        type:Schema.Types.ObjectId,
+    }]
 });
 
 exports.User = model('users', userSchema);
