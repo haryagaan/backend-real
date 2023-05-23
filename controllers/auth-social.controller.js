@@ -15,12 +15,8 @@ exports.SocialAuth = async (req, res) => {
                 expiresIn:"6h"
             })
 
-            // const id=existingUser._id;
-
-            // req.headers.authorization=userToken;
-
             res.status(200).json({ token: userToken , isNew: false });
-        } else {
+        } else if(!existingUser){
             const spaceIndex = displayName.indexOf(' ');
 
             const firstName = displayName.slice(0, spaceIndex);

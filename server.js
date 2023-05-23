@@ -6,7 +6,7 @@ const cors = require('cors');
 
 const multer=require("multer");
 
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 
 const path=require("path");
 
@@ -57,7 +57,7 @@ const {decodeToken}=require("./decode/decode")
 
 app.use(express.json({limit: '100mb'}));
 
-app.use(express.urlencoded({limit: '100mb'}));
+// app.use(express.urlencoded({limit: '100mb'}));
 
 app.use(cors());
 

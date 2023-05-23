@@ -13,7 +13,7 @@ const {
     setGalleryImage,
     changeUserInfo,
     LikeUser,
-    DislikeUser
+    DislikeUser,
 } = require('../controllers/user.controller');
 
 const { roleMiddleware } = require('../middleware/roleMiddleware');

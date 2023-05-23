@@ -177,7 +177,24 @@ exports.getUsers = async (req, res) => {
 
         const usersSocial = await UserSocial.find({});
 
-        res.status(200).json({ basic: users, usersSocial: usersSocial });
+        let allUsers=[];
+
+        usersSocial.map((user,i)=>{
+            allUsers.push({likes:user.likes.length , user:user});
+        })
+
+        users.map((user , i)=>{
+            allUsers.push({likes:user.likes.length , user:user});
+        })
+
+        allUsers.sort((a,b)=>a.likes.length > b.likes.length ? 1 : -1)
+
+        allUsers.reverse();
+
+        let popular10=allUsers.slice(0,10)
+
+        res.status(200).json(popular10)
+
     } catch (err) {
         throw res.send(err);
     }
@@ -465,7 +482,9 @@ exports.LikeUser=async(req,res)=>{
                 //no like from the start
 
                 if(indexDisliked==-1){
-                    existingAcc.totalReacts.splice(indexTotalReacts , 1);
+                    // existingAcc.totalReacts.splice(indexTotalReacts , 1);
+
+                    // existingAcc.dislikes.splice(indexDisliked , 1);
 
                     existingAcc.likes.push(id);
 
@@ -475,13 +494,13 @@ exports.LikeUser=async(req,res)=>{
 
                     res.status(200).send("Like added");
                 }else if(indexDisliked!=-1){
-                    existingAcc.totalReacts.splice(indexTotalReacts , 1);
+                    // existingAcc.totalReacts.splice(indexTotalReacts , 1);
 
                     existingAcc.dislikes.splice(indexDisliked , 1);
 
                     existingAcc.likes.push(id);
 
-                    existingAcc.totalReacts.push(id);
+                    // existingAcc.totalReacts.push(id);
 
                     await existingAcc.save();
 
@@ -509,7 +528,7 @@ exports.LikeUser=async(req,res)=>{
                 //no like from the start
 
                 if(indexDisliked==-1){
-                    existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
+                    // existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
 
                     existingAccSocial.likes.push(id);
 
@@ -519,13 +538,13 @@ exports.LikeUser=async(req,res)=>{
 
                     res.status(200).send("Like added");
                 }else if(indexDisliked!=-1){
-                    existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
+                    // existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
 
                     existingAccSocial.dislikes.splice(indexDisliked , 1);
 
                     existingAccSocial.likes.push(id);
 
-                    existingAccSocial.totalReacts.push(id);
+                    // existingAccSocial.totalReacts.push(id);
 
                     await existingAccSocial.save();
 
@@ -581,7 +600,7 @@ exports.DislikeUser=async(req,res)=>{
             if(indexDisliked==-1){
                 //no dislike from the start
                 if(indexLiked==-1){
-                    existingAcc.totalReacts.splice(indexTotalReacts , 1);
+                    // existingAcc.totalReacts.splice(indexTotalReacts , 1);
 
                     existingAcc.dislikes.push(id);
 
@@ -619,7 +638,7 @@ exports.DislikeUser=async(req,res)=>{
             if(indexDisliked==-1){
                 //no dislike from the start
                 if(indexLiked==-1){
-                    existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
+                    // existingAccSocial.totalReacts.splice(indexTotalReacts , 1);
 
                     existingAccSocial.dislikes.push(id);
 
