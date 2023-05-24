@@ -216,11 +216,19 @@ exports.getUser = async (req, res) => {
             return res.send('No user found');
         } else {
             if (existingUser) {
+                const postsFreelancer=await User.findById(id).populate("postFreelancers");
+
+                const postsClient=await User.findById(id).populate("postClients");
+
                 existingUser.password = undefined;
-                return res.json({ user: existingUser });
+                return res.json({ user: existingUser , postFreelancers:postsFreelancer.postFreelancers , postClients:postsClient.postClients });
             } else {
+                const postsFreelancer=await UserSocial.findById(id).populate("postFreelancers");
+
+                const postsClient=await UserSocial.findById(id).populate("postClients");
+
                 existingUserSocial.password = undefined;
-                return res.json({ user: existingUserSocial });
+                return res.json({ user: existingUserSocial , postFreelancers:postsFreelancer.postFreelancers , postClients:postsClient.postClients});
             }
         }
     } catch (err) {

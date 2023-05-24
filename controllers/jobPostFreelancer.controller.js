@@ -65,7 +65,11 @@ exports.createPostFreelancer=async(req,res)=>{
                 creatorSocialId:null
             });
 
+            existingUser.postFreelancers.push(newPostFreelancer._id);
+
             job.freelancerPosts.push(newPostFreelancer._id);
+
+            await existingUser.save();
 
             await job.save();
 
@@ -91,7 +95,11 @@ exports.createPostFreelancer=async(req,res)=>{
                 creatorSocialId:id
             });
 
+            existingUserSocial.postFreelancers.push(newPostFreelancer._id);
+
             job.freelancerPosts.push(newPostFreelancer._id);
+
+            await existingUserSocial.save();
 
             await job.save();
 

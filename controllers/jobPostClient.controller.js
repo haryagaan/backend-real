@@ -65,7 +65,11 @@ exports.createPostClient=async(req,res)=>{
                 creatorSocialId:null,
             });
 
+            existingUser.postClients.push(newPostClient._id);
+
             job.clientPosts.push(newPostClient._id);
+
+            await existingUser.save();
 
             await job.save();
             
@@ -91,7 +95,11 @@ exports.createPostClient=async(req,res)=>{
                 creatorSocialId:id,
             });
 
+            existingUserSocial.postClients.push(newPostClient._id);
+
             job.clientPosts.push(newPostClient._id);
+
+            await existingUserSocial.save();
 
             await job.save();
             

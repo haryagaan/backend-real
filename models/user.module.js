@@ -121,7 +121,17 @@ const userSchema = new Schema({
 
     totalReacts:[{
         type:Schema.Types.ObjectId,
-    }]
+    }],
+
+    postFreelancers:[{
+        type:Schema.Types.ObjectId,
+        ref:"jobs-posts-freelancer",
+    }],
+
+    postClients:[{
+        type:Schema.Types.ObjectId,
+        ref:"jobs-posts-client",
+    }],
 });
 
 exports.User = model('users', userSchema);
