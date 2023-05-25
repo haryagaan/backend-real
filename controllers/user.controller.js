@@ -134,10 +134,10 @@ exports.setGalleryImage=async(req,res)=>{
 exports.changeUserInfo=async(req,res)=>{
     const token=req.params.token;
 
-    const {info}=req.body; 
+    const {info,facebook,instagram,google,phone}=req.body; 
 
-    if(!token || !info){
-        return res.status(400).send("Token or info required");
+    if(!token){
+        return res.status(400).send("Token required");
     }
 
     try{
@@ -153,23 +153,60 @@ exports.changeUserInfo=async(req,res)=>{
             return res.status(404).send("User not found");
         }
 
-        if(existingUser){
+       if(existingUser){
+        if(facebook!=null){
+            existingUser.facebookInfo=facebook;
+        }
+        if(instagram!=null){
+            existingUser.instagramInfo=instagram;
+        }
+        if(google!=null){
+            existingUser.googleInfo=google;
+        }
+        if(phone!=null){
+            if(phone.length==8){
+                existingUser.phoneInfo=phone;
+            }else{
+                return res.status(400).send("Phone number must be 8 characters long")
+            }
+        }
+        if(info!=null){
             existingUser.infoText=info;
+        }
 
-            await existingUser.save();
+        await existingUser.save();
 
-            res.status(200).send("Info changed");
-        }else if(existingUserSocial){
-            existingUserSocial.infoText=info;
+        res.status(200).send("Changed")
+       }else if(existingUserSocial){
+            if(facebook!=null){
+                existingUserSocial.facebookInfo=facebook;
+            }
+            if(instagram!=null){
+                existingUserSocial.instagramInfo=instagram;
+            }
+            if(google!=null){
+                existingUserSocial.googleInfo=google;
+            }
+            if(phone!=null){
+                if(phone.length==8){
+                    existingUserSocial.phoneInfo=phone;
+                }else{
+                    return res.status(400).send("Phone number must be 8 characters long")
+                }
+            }
+            if(info!=null){
+                existingUserSocial.infoText=info;
+            }
 
             await existingUserSocial.save();
 
-            res.status(200).send("Info changed")
-        }
+            res.status(200).send("Changed")
+       }
     }catch(err){
         res.send(err);
     }
 }
+
 
 exports.getUsers = async (req, res) => {
     try {
@@ -187,13 +224,13 @@ exports.getUsers = async (req, res) => {
             allUsers.push({likes:user.likes.length , user:user});
         })
 
-        allUsers.sort((a,b)=>a.likes.length > b.likes.length ? 1 : -1)
+        allUsers.sort((a,b)=>a.likes > b.likes ? 1 : -1)
 
         allUsers.reverse();
 
         let popular10=allUsers.slice(0,10)
 
-        res.status(200).json(popular10)
+        res.status(200).json(allUsers)
 
     } catch (err) {
         throw res.send(err);
