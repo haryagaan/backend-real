@@ -43,7 +43,7 @@ exports.getSpecificCategory = async (req, res) => {
 };
 exports.getAllCategory = async (req, res) => {
     try {
-        const existingCategory = await JobCategory.find({});
+        const existingCategory = await JobCategory.find({}).populate("jobs");
 
         res.status(200).json(existingCategory);
     } catch (err) {
